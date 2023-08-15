@@ -10,7 +10,7 @@ interface DataTableProps<T = unknown> {
 export const DataTable = <T,>({ data, columnDefs }: DataTableProps<T>) => {
   const setData = useTableStore((state: TableStoreState) => state.setData);
 
-  const [prevData, setPrevData] = useState(data);
+  const [prevData, setPrevData] = useState<T[]>([]);
   if (prevData !== data) {
     setPrevData(data);
     setData(data, columnDefs);
