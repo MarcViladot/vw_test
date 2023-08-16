@@ -11,6 +11,8 @@ interface ContextValue {
   columnDefs: ColumnDefs[];
   sorting: null | SortingState;
   toggleSort: (field: string) => void;
+  searchText: string;
+  handleSearchText: (text: string) => void;
 }
 
 const DataTableContext = createContext<ContextValue>({
@@ -18,6 +20,8 @@ const DataTableContext = createContext<ContextValue>({
   columnDefs: [],
   sorting: null,
   toggleSort: () => null,
+  searchText: '',
+  handleSearchText: () => null,
 });
 
 interface ProviderProps<T = unknown> {
@@ -28,6 +32,7 @@ interface ProviderProps<T = unknown> {
 
 export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDefs }) => {
   const [sorting, setSorting] = useState<SortingState | null>(null);
+  const [searchText, setSearchText] = useState('');
 
   const toggleSort = (field: string) => {
     setSorting((prevSorting) => {
@@ -58,8 +63,21 @@ export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDef
     });
   }, [data, sorting]);
 
+  const filteredData = useMemo(() => {
+    if (!searchText) return sortedData;
+    return sortedData.filter((item) => {
+      const concatenatedValues = Object.values(item)
+        .map((value) => value.toString())
+        .join('')
+        .toLowerCase();
+
+      return concatenatedValues.includes(searchText.toLowerCase());
+    });
+  }, [searchText, sortedData]);
+
   return (
-    <DataTableContext.Provider value={{ data: sortedData, columnDefs, sorting, toggleSort }}>
+    <DataTableContext.Provider
+      value={{ data: filteredData, columnDefs, sorting, toggleSort, handleSearchText: setSearchText, searchText }}>
       {children}
     </DataTableContext.Provider>
   );
