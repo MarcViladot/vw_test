@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ColumnDefs } from './types';
-import { useTableStore, TableStoreState } from './store';
+import { DataTableProvider } from '@/components/DataTable/context/DataTableContext';
 
 interface DataTableProps<T = unknown> {
   data: T[];
@@ -8,13 +8,9 @@ interface DataTableProps<T = unknown> {
 }
 
 export const DataTable = <T,>({ data, columnDefs }: DataTableProps<T>) => {
-  const setData = useTableStore((state: TableStoreState) => state.setData);
-
-  const [prevData, setPrevData] = useState<T[]>([]);
-  if (prevData !== data) {
-    setPrevData(data);
-    setData(data, columnDefs);
-  }
-
-  return <div></div>;
+  return (
+    <DataTableProvider data={data} columnDefs={columnDefs}>
+      <div />
+    </DataTableProvider>
+  );
 };
