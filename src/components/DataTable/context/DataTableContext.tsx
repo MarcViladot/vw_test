@@ -15,7 +15,7 @@ interface ContextValue {
   handleSearchText: (text: string) => void;
 }
 
-const DataTableContext = createContext<ContextValue>({
+export const DataTableContext = createContext<ContextValue>({
   data: [],
   columnDefs: [],
   sorting: null,
