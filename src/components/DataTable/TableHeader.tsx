@@ -21,21 +21,23 @@ const HeaderCell: FC<ColumnDefs> = ({ headerName, field }) => {
 
   return (
     <div
-      className={'table-cell cursor-pointer gap-5'}
+      className={'table-cell cursor-pointer border border-black p-1'}
       data-testid={field}
       onClick={() => {
         toggleSort(field);
       }}>
-      {headerName}
-      {sortDirection && (
-        <div data-testid={'sort-status'}>
-          {sortDirection === 'asc' ? (
-            <FaArrowDownLong data-testid={'arrow-up'} />
-          ) : (
-            <FaArrowUpLong data-testid={'arrow-down'} />
-          )}
-        </div>
-      )}
+      <div className={'flex justify-between items-center'}>
+        {headerName}
+        {sortDirection && (
+          <div data-testid={'sort-status'}>
+            {sortDirection === 'asc' ? (
+              <FaArrowDownLong data-testid={'arrow-up'} />
+            ) : (
+              <FaArrowUpLong data-testid={'arrow-down'} />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
