@@ -1,4 +1,4 @@
-import { createContext, FC, ReactElement } from 'react';
+import { createContext, FC, ReactElement, useContext } from 'react';
 import { ColumnDefs } from '@/components/DataTable';
 
 interface ContextValue {
@@ -20,3 +20,5 @@ interface ProviderProps {
 export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDefs }) => {
   return <DataTableContext.Provider value={{ data, columnDefs }}>{children}</DataTableContext.Provider>;
 };
+
+export const useDataTableContext = () => useContext(DataTableContext);
