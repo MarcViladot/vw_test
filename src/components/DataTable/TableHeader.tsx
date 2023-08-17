@@ -6,11 +6,13 @@ import { FaArrowDownLong, FaArrowUpLong } from 'react-icons/fa6';
 export const TableHeader = () => {
   const { columnDefs } = useDataTableContext();
   return (
-    <div className={'table-row'}>
-      {columnDefs.map((def) => (
-        <HeaderCell {...def} key={def.field} />
-      ))}
-    </div>
+    <>
+      <div className={'table-row'}>
+        {columnDefs.map((def) => (
+          <HeaderCell {...def} key={def.field} />
+        ))}
+      </div>
+    </>
   );
 };
 
@@ -21,12 +23,12 @@ const HeaderCell: FC<ColumnDefs> = ({ headerName, field }) => {
 
   return (
     <div
-      className={'table-cell cursor-pointer border border-black p-1'}
+      className={'table-cell cursor-pointer p-1 px-2 bg-[#F1F3FA]'}
       data-testid={field}
       onClick={() => {
         toggleSort(field);
       }}>
-      <div className={'flex justify-between items-center'}>
+      <div className={'flex justify-between items-center text-sm font-bold text-[#ACB1C5]'}>
         {headerName}
         {sortDirection && (
           <div data-testid={'sort-status'}>

@@ -37,5 +37,5 @@ interface CellProps {
 }
 
 const Cell: FC<CellProps> = ({ value }) => {
-  return <div className={'table-cell border border-black p-1'}>{value}</div>;
+  return <div className={'table-cell border-b py-3.5 px-2'}>{value}</div>;
 };
