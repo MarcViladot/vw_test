@@ -42,6 +42,7 @@ export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues }) =
             <div className={'flex gap-3 items-center'}>
               {!isEditing ? (
                 <MdOutlineEdit
+                  data-testid={'edit-icon'}
                   className={'cursor-pointer'}
                   onClick={() => {
                     setIsEditing(true);
@@ -50,12 +51,14 @@ export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues }) =
               ) : (
                 <>
                   <GiConfirmed
+                    data-testid={'submit-icon'}
                     className={'cursor-pointer'}
                     onClick={() => {
                       formik.submitForm();
                     }}
                   />
                   <GiCancel
+                    data-testid={'cancel-icon'}
                     className={'cursor-pointer'}
                     onClick={() => {
                       setIsEditing(false);
