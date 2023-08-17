@@ -11,6 +11,9 @@ export const TableHeader = () => {
         {columnDefs.map((def) => (
           <HeaderCell {...def} key={def.field} />
         ))}
+        <div className={'table-cell cursor-pointer p-1 px-2 bg-[#F1F3FA]'}>
+          <div className={'flex justify-between items-center text-sm font-bold text-[#ACB1C5]'}>Actions</div>
+        </div>
       </div>
     </>
   );

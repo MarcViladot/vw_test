@@ -13,6 +13,7 @@ interface ContextValue {
   toggleSort: (field: string) => void;
   searchText: string;
   handleSearchText: (text: string) => void;
+  onRowEdit?: (values: unknown) => void;
 }
 
 export const DataTableContext = createContext<ContextValue>({
@@ -27,10 +28,11 @@ export const DataTableContext = createContext<ContextValue>({
 interface ProviderProps<T = unknown> {
   data: T[];
   columnDefs: ColumnDefs[];
+  onRowEdit?: (values: T) => void;
   children: ReactElement;
 }
 
-export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDefs }) => {
+export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDefs, onRowEdit }) => {
   const [sorting, setSorting] = useState<SortingState | null>(null);
   const [searchText, setSearchText] = useState('');
 
@@ -77,7 +79,15 @@ export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDef
 
   return (
     <DataTableContext.Provider
-      value={{ data: filteredData, columnDefs, sorting, toggleSort, handleSearchText: setSearchText, searchText }}>
+      value={{
+        data: filteredData,
+        columnDefs,
+        sorting,
+        toggleSort,
+        handleSearchText: setSearchText,
+        searchText,
+        onRowEdit,
+      }}>
       {children}
     </DataTableContext.Provider>
   );

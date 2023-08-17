@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import { DataTableContext } from '@/components/DataTable/context/DataTableContext';
 import { TableBody } from '@/components/DataTable/TableBody';
+import { ColumnDefs } from '@/components/DataTable';
 
 const mockedData = [
   { name: 'Jose', age: 20 },
@@ -9,9 +10,9 @@ const mockedData = [
   { name: 'Eloi', age: 30 },
 ];
 
-const columnDefs = [
-  { headerName: 'Name', field: 'name' },
-  { headerName: 'Age', field: 'age' },
+const columnDefs: ColumnDefs[] = [
+  { headerName: 'Name', field: 'name', type: 'text' },
+  { headerName: 'Age', field: 'age', type: 'number' },
 ];
 
 describe('TableBody Test', () => {
