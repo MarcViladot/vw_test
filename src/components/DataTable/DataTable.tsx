@@ -1,9 +1,7 @@
 import React from 'react';
 import { ColumnDefs } from './types';
-import { DataTableProvider } from '@/components/DataTable/context/DataTableContext';
-import { TableHeader } from '@/components/DataTable/TableHeader';
-import { TableBody } from '@/components/DataTable/TableBody';
-import { TableSearchBar } from '@/components/DataTable/TableSearchBar';
+import { DataTableProvider } from './context/DataTableContext';
+import { TableHeader, TableBody, TableSearchBar } from './components';
 
 interface DataTableProps<T = unknown> {
   data: T[];

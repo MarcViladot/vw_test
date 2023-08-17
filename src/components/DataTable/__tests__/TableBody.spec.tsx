@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import { DataTableContext } from '@/components/DataTable/context/DataTableContext';
-import { TableBody } from '@/components/DataTable/TableBody';
+import { TableBody } from '@/components/DataTable/components/TableBody';
 import { ColumnDefs } from '@/components/DataTable';
 
 const mockedData = [

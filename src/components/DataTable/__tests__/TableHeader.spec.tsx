@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render, within } from '@testing-library/react';
-import { TableHeader } from '@/components/DataTable/TableHeader';
+import { TableHeader } from '@/components/DataTable/components/TableHeader';
 import { DataTableContext, SortingState } from '@/components/DataTable/context/DataTableContext';
 import { FC } from 'react';
 
