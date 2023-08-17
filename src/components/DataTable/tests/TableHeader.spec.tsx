@@ -1,18 +1,29 @@
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render, within } from '@testing-library/react';
 import { TableHeader } from '@/components/DataTable/TableHeader';
-import { DataTableProvider } from '@/components/DataTable/context/DataTableContext';
+import { DataTableContext, SortingState } from '@/components/DataTable/context/DataTableContext';
+import { FC } from 'react';
 
 const mockColumnDefs = [
   { headerName: 'Name', field: 'name' },
   { headerName: 'Age', field: 'age' },
 ];
 
+const toggleSort = vi.fn();
+
 describe('TableHeader Test', () => {
-  const WithProvider = () => (
-    <DataTableProvider data={[]} columnDefs={mockColumnDefs}>
+  const WithProvider: FC<{ sorting?: SortingState }> = ({ sorting }) => (
+    <DataTableContext.Provider
+      value={{
+        data: [],
+        columnDefs: mockColumnDefs,
+        sorting: sorting ?? null,
+        toggleSort,
+        handleSearchText: vi.fn(),
+        searchText: '',
+      }}>
       <TableHeader />
-    </DataTableProvider>
+    </DataTableContext.Provider>
   );
 
   it('should render correctly', () => {
@@ -23,35 +34,26 @@ describe('TableHeader Test', () => {
     const headers = container.getElementsByClassName('table-cell');
     expect(headers.length).toBe(mockColumnDefs.length);
   });
-  it('should show sort status on header click', () => {
-    const container = render(<WithProvider />);
-    const nameHeader = container.getByTestId('name');
+  it('should show sort status on header', () => {
+    const { getByTestId, rerender } = render(<WithProvider />);
+    const nameHeader = getByTestId('name');
     const { queryByTestId } = within(nameHeader);
     expect(queryByTestId('sort-status')).toBeFalsy();
-    fireEvent.click(nameHeader);
+    rerender(<WithProvider sorting={{ field: 'name', direction: 'asc' }} />);
     expect(queryByTestId('sort-status')).toBeTruthy();
   });
-  it('should toggle sort icons on header click', () => {
+  it('should call toggleSort on header click', () => {
     const container = render(<WithProvider />);
     const nameHeader = container.getByTestId('name');
-    const { queryByTestId } = within(nameHeader);
-    expect(queryByTestId('sort-status')).toBeFalsy();
     fireEvent.click(nameHeader);
-    expect(queryByTestId('arrow-up')).toBeTruthy();
-    fireEvent.click(nameHeader);
-    expect(queryByTestId('arrow-down')).toBeTruthy();
-    fireEvent.click(nameHeader);
-    expect(queryByTestId('sort-status')).toBeFalsy();
+    expect(toggleSort).toBeCalledWith('name');
   });
-  it('should show/hide sort status on diff headers click', () => {
-    const container = render(<WithProvider />);
-    const nameHeader = container.getByTestId('name');
-    const ageHeader = container.getByTestId('age');
-    expect(container.queryByTestId('sort-status')).toBeFalsy();
-    fireEvent.click(nameHeader);
-    expect(within(nameHeader).queryByTestId('sort-status')).toBeTruthy();
-    fireEvent.click(ageHeader);
-    expect(within(nameHeader).queryByTestId('sort-status')).toBeFalsy();
-    expect(within(ageHeader).queryByTestId('sort-status')).toBeTruthy();
+  it('should show sort direction', () => {
+    const { getByTestId, rerender } = render(<WithProvider sorting={{ field: 'name', direction: 'asc' }} />);
+    const nameHeader = getByTestId('name');
+    const { queryByTestId } = within(nameHeader);
+    expect(queryByTestId('arrow-up')).toBeTruthy();
+    rerender(<WithProvider sorting={{ field: 'name', direction: 'desc' }} />);
+    expect(queryByTestId('arrow-down')).toBeTruthy();
   });
 });

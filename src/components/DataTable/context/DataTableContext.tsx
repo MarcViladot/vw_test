@@ -1,7 +1,7 @@
 import { createContext, FC, ReactElement, useContext, useMemo, useState } from 'react';
 import { ColumnDefs } from '@/components/DataTable';
 
-interface SortingState {
+export interface SortingState {
   field: string;
   direction: 'asc' | 'desc';
 }

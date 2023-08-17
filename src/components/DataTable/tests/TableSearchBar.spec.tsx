@@ -1,24 +1,32 @@
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
-import { DataTableProvider } from '@/components/DataTable/context/DataTableContext';
+import { DataTableContext } from '@/components/DataTable/context/DataTableContext';
 import { TableSearchBar } from '@/components/DataTable/TableSearchBar';
+
+const handleSearch = vi.fn();
 
 describe('TableSearchBar Test', () => {
   const WithProvider = () => (
-    <DataTableProvider data={[]} columnDefs={[]}>
+    <DataTableContext.Provider
+      value={{
+        data: [],
+        columnDefs: [],
+        sorting: null,
+        toggleSort: vi.fn(),
+        handleSearchText: handleSearch,
+        searchText: '',
+      }}>
       <TableSearchBar />
-    </DataTableProvider>
+    </DataTableContext.Provider>
   );
 
   it('should render correctly', () => {
     render(<WithProvider />);
   });
-  it('should show input change', () => {
-    const { getByPlaceholderText, debug } = render(<WithProvider />);
+  it('should call handleSearchText on input change', () => {
+    const { getByPlaceholderText } = render(<WithProvider />);
     const input = getByPlaceholderText('🔍 Search anything') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '1234' } });
-    debug();
-    console.log(input);
-    expect(input.value).toBe('1234');
+    expect(handleSearch).toBeCalledWith('1234');
   });
 });
