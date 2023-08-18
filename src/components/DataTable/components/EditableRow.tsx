@@ -7,12 +7,14 @@ import { RowValues } from '../types';
 
 interface Props {
   onSubmit: (values: unknown) => void;
+  onCancel?: () => void;
   initialValues: any;
   rowValues: RowValues[];
+  editing?: boolean;
 }
 
-export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues }) => {
-  const [isEditing, setIsEditing] = useState(false);
+export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues, editing, onCancel }) => {
+  const [isEditing, setIsEditing] = useState(editing ?? false);
 
   return (
     <Formik
@@ -63,6 +65,7 @@ export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues }) =
                     onClick={() => {
                       setIsEditing(false);
                       formik.resetForm();
+                      onCancel?.();
                     }}
                   />
                 </>
