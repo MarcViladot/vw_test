@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from 'react';
-import { ColumnDefs, RowValues } from './types';
-import { DataTableProvider, useDataTableContext } from './context/DataTableContext';
-import { TableHeader, TableBody, TableSearchBar, EditableRow } from './components';
+import React, { useState } from 'react';
+import { ColumnDefs } from './types';
+import { DataTableProvider } from './context/DataTableContext';
+import { TableHeader, TableBody, TableSearchBar, NewRow } from './components';
 
 interface DataTableProps<T = unknown> {
   data: T[];
@@ -33,7 +33,8 @@ export const DataTable = <T,>({ data, columnDefs, onRowEdit, newRowModel, onRowA
         <div className={'table table-fixed w-full'}>
           <TableHeader />
           {newRow && onRowAdded && (
-            <AddRow<T>
+            <NewRow<T>
+              columnDefs={columnDefs}
               onCancel={() => {
                 setNewRow(undefined);
               }}
@@ -48,34 +49,5 @@ export const DataTable = <T,>({ data, columnDefs, onRowEdit, newRowModel, onRowA
         </div>
       </div>
     </DataTableProvider>
-  );
-};
-
-interface AddRowProps<T> {
-  newRow: Partial<T>;
-  onRowAdded: (values: Partial<T>) => void;
-  onCancel: () => void;
-}
-
-export const AddRow = <T,>({ newRow, onRowAdded, onCancel }: AddRowProps<T>) => {
-  const { columnDefs } = useDataTableContext();
-
-  const rowValues: RowValues[] = useMemo(
-    () => columnDefs.map((def) => ({ value: newRow[def.field as keyof T], field: def.field, type: def.type })),
-    [newRow, columnDefs]
-  );
-
-  const handleSubmit = (values: T) => {
-    onRowAdded(values);
-  };
-
-  return (
-    <EditableRow
-      onCancel={onCancel}
-      onSubmit={handleSubmit}
-      initialValues={newRow}
-      rowValues={rowValues}
-      editing={true}
-    />
   );
 };
