@@ -17,6 +17,7 @@ function App() {
         ]}
         onRowEdit={console.log}
         onRowAdded={console.log}
+        onRowDeleted={console.log}
       />
     </div>
   );

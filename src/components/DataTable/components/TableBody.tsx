@@ -4,6 +4,7 @@ import { ColumnDefs, RowValues } from '../types';
 import { TableBodyCell } from './TableBodyCell';
 import { EditableRow } from './EditableRow';
 import { NewRow } from '@/components/DataTable/components/NewRow';
+import { FaTrash } from 'react-icons/fa6';
 
 export const TableBody = () => {
   const { data, columnDefs, newRow, onRowAdded, cancelNewRow } = useDataTableContext();
@@ -21,26 +22,42 @@ export const TableBody = () => {
           }}
         />
       )}
-      {data.length ? data.map((row, i) => <TableRow key={i} data={row} columnDefs={columnDefs} />) : <h3>No data</h3>}
+      {data.length ? (
+        data.map((row, i) => <TableRow rowIndex={i} key={i} data={row} columnDefs={columnDefs} />)
+      ) : (
+        <h3>No data</h3>
+      )}
     </>
   );
 };
 
 interface TableRowProps {
+  rowIndex: number;
   data: unknown;
   columnDefs: ColumnDefs[];
 }
 
-const TableRow: FC<TableRowProps> = ({ data, columnDefs }) => {
-  const { onRowEdit } = useDataTableContext();
+const TableRow: FC<TableRowProps> = ({ data, columnDefs, rowIndex }) => {
+  const { onRowEdit, onRowDeleted } = useDataTableContext();
 
   const rowValues: RowValues[] = useMemo(
     () => columnDefs.map((def) => ({ value: data[def.field], field: def.field, type: def.type })),
     [data, columnDefs]
   );
 
+  const handleRowDelete = () => {
+    onRowDeleted?.({ row: rowIndex, data });
+  };
+
   if (onRowEdit) {
-    return <EditableRow onSubmit={onRowEdit} initialValues={{ ...(data as object) }} rowValues={rowValues} />;
+    return (
+      <EditableRow
+        onSubmit={onRowEdit}
+        onDelete={onRowDeleted ? handleRowDelete : undefined}
+        initialValues={{ ...(data as object) }}
+        rowValues={rowValues}
+      />
+    );
   }
 
   return (
@@ -48,6 +65,11 @@ const TableRow: FC<TableRowProps> = ({ data, columnDefs }) => {
       {rowValues.map(({ field, value }, i) => (
         <TableBodyCell key={i}>{value}</TableBodyCell>
       ))}
+      {onRowDeleted && (
+        <TableBodyCell>
+          <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={handleRowDelete} />
+        </TableBodyCell>
+      )}
     </div>
   );
 };

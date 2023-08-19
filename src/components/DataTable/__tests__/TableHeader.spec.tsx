@@ -3,10 +3,11 @@ import { fireEvent, render, within } from '@testing-library/react';
 import { TableHeader } from '@/components/DataTable/components/TableHeader';
 import { DataTableContext, SortingState } from '@/components/DataTable/context/DataTableContext';
 import { FC } from 'react';
+import { ColumnDefs } from '@/components/DataTable';
 
-const mockColumnDefs = [
-  { headerName: 'Name', field: 'name' },
-  { headerName: 'Age', field: 'age' },
+const mockColumnDefs: ColumnDefs[] = [
+  { headerName: 'Name', field: 'name', type: 'text' },
+  { headerName: 'Age', field: 'age', type: 'number' },
 ];
 
 const toggleSort = vi.fn();
@@ -21,6 +22,9 @@ describe('TableHeader Test', () => {
         toggleSort,
         handleSearchText: vi.fn(),
         searchText: '',
+        cancelNewRow: vi.fn(),
+        newRow: undefined,
+        addNewRow: vi.fn(),
       }}>
       <TableHeader />
     </DataTableContext.Provider>

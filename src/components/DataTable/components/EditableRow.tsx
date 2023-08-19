@@ -4,16 +4,18 @@ import { TableBodyCell } from '@/components/DataTable/components/TableBodyCell';
 import { MdOutlineEdit } from 'react-icons/md';
 import { GiCancel, GiConfirmed } from 'react-icons/gi';
 import { RowValues } from '../types';
+import { FaTrash } from 'react-icons/fa6';
 
 interface Props {
   onSubmit: (values: unknown) => void;
   onCancel?: () => void;
+  onDelete?: () => void;
   initialValues: any;
   rowValues: RowValues[];
   editing?: boolean;
 }
 
-export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues, editing, onCancel }) => {
+export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues, editing, onCancel, onDelete }) => {
   const [isEditing, setIsEditing] = useState(editing ?? false);
 
   return (
@@ -43,13 +45,16 @@ export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues, edi
           <div className={'table-cell border-b py-3.5 px-2 cursor-pointer'}>
             <div className={'flex gap-3 items-center'}>
               {!isEditing ? (
-                <MdOutlineEdit
-                  data-testid={'edit-icon'}
-                  className={'cursor-pointer'}
-                  onClick={() => {
-                    setIsEditing(true);
-                  }}
-                />
+                <>
+                  <MdOutlineEdit
+                    data-testid={'edit-icon'}
+                    className={'cursor-pointer'}
+                    onClick={() => {
+                      setIsEditing(true);
+                    }}
+                  />
+                  {onDelete && <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={onDelete} />}
+                </>
               ) : (
                 <>
                   <GiConfirmed

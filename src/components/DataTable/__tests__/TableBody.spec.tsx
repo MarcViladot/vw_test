@@ -25,6 +25,9 @@ describe('TableBody Test', () => {
         toggleSort: vi.fn(),
         handleSearchText: vi.fn(),
         searchText: '',
+        cancelNewRow: vi.fn(),
+        newRow: undefined,
+        addNewRow: vi.fn(),
       }}>
       <TableBody />
     </DataTableContext.Provider>

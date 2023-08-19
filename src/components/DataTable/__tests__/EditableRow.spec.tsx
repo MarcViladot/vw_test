@@ -60,4 +60,13 @@ describe('EditableRow Test', () => {
     fireEvent.click(getByTestId('cancel-icon'));
     expect(queryByText('Value 1')).toBeTruthy();
   });
+
+  it('should call onDelete on trash click', () => {
+    const onDelete = vi.fn();
+    const { getByTestId } = render(
+      <EditableRow onSubmit={vi.fn()} onDelete={onDelete} initialValues={initialValues} rowValues={rowValues} />
+    );
+    fireEvent.click(getByTestId('trash-icon'));
+    expect(onDelete).toHaveBeenCalled();
+  });
 });

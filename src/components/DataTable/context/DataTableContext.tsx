@@ -15,9 +15,10 @@ interface ContextValue {
   handleSearchText: (text: string) => void;
   newRow: unknown | undefined;
   addNewRow: () => void;
+  cancelNewRow: () => void;
   onRowEdit?: (values: unknown) => void;
   onRowAdded?: (values: unknown) => void;
-  cancelNewRow: () => void;
+  onRowDeleted?: ({ row, data }: { row: number; data: unknown }) => void;
 }
 
 export const DataTableContext = createContext<ContextValue>({
@@ -39,6 +40,7 @@ interface ProviderProps<T = unknown> {
   children: ReactElement;
   newRowModel?: Partial<T>;
   onRowAdded?: (values: Partial<T>) => void;
+  onRowDeleted?: ({ row, data }: { row: number; data: T }) => void;
 }
 
 export const DataTableProvider: FC<ProviderProps> = ({
@@ -48,6 +50,7 @@ export const DataTableProvider: FC<ProviderProps> = ({
   onRowEdit,
   newRowModel,
   onRowAdded,
+  onRowDeleted,
 }) => {
   const [sorting, setSorting] = useState<SortingState | null>(null);
   const [searchText, setSearchText] = useState('');
@@ -117,6 +120,7 @@ export const DataTableProvider: FC<ProviderProps> = ({
         newRow,
         onRowAdded,
         cancelNewRow,
+        onRowDeleted,
       }}>
       {children}
     </DataTableContext.Provider>
