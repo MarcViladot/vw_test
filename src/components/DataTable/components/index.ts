@@ -4,3 +4,4 @@ export * from './TableBody';
 export * from './TableHeader';
 export * from './TableSearchBar';
 export * from './NewRow';
+export * from './TableUtilities';

@@ -1,4 +1,4 @@
-import { createContext, FC, ReactElement, useContext, useMemo, useState } from 'react';
+import { createContext, FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import { ColumnDefs } from '@/components/DataTable';
 
 export interface SortingState {
@@ -13,7 +13,11 @@ interface ContextValue {
   toggleSort: (field: string) => void;
   searchText: string;
   handleSearchText: (text: string) => void;
+  newRow: unknown | undefined;
+  addNewRow: () => void;
   onRowEdit?: (values: unknown) => void;
+  onRowAdded?: (values: unknown) => void;
+  cancelNewRow: () => void;
 }
 
 export const DataTableContext = createContext<ContextValue>({
@@ -23,6 +27,9 @@ export const DataTableContext = createContext<ContextValue>({
   toggleSort: () => null,
   searchText: '',
   handleSearchText: () => null,
+  addNewRow: () => null,
+  newRow: undefined,
+  cancelNewRow: () => null,
 });
 
 interface ProviderProps<T = unknown> {
@@ -30,11 +37,22 @@ interface ProviderProps<T = unknown> {
   columnDefs: ColumnDefs[];
   onRowEdit?: (values: T) => void;
   children: ReactElement;
+  newRowModel?: Partial<T>;
+  onRowAdded?: (values: Partial<T>) => void;
 }
 
-export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDefs, onRowEdit }) => {
+export const DataTableProvider: FC<ProviderProps> = ({
+  children,
+  data,
+  columnDefs,
+  onRowEdit,
+  newRowModel,
+  onRowAdded,
+}) => {
   const [sorting, setSorting] = useState<SortingState | null>(null);
   const [searchText, setSearchText] = useState('');
+
+  const [newRow, setNewRow] = useState<Partial<unknown>>();
 
   const toggleSort = (field: string) => {
     setSorting((prevSorting) => {
@@ -77,6 +95,14 @@ export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDef
     });
   }, [searchText, sortedData]);
 
+  const addNewRow = useCallback(() => {
+    setNewRow(newRowModel);
+  }, [newRowModel]);
+
+  const cancelNewRow = useCallback(() => {
+    setNewRow(undefined);
+  }, []);
+
   return (
     <DataTableContext.Provider
       value={{
@@ -87,6 +113,10 @@ export const DataTableProvider: FC<ProviderProps> = ({ children, data, columnDef
         handleSearchText: setSearchText,
         searchText,
         onRowEdit,
+        addNewRow,
+        newRow,
+        onRowAdded,
+        cancelNewRow,
       }}>
       {children}
     </DataTableContext.Provider>

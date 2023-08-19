@@ -32,7 +32,7 @@ describe('TableHeader Test', () => {
   it('should render all the headers', () => {
     const { container } = render(<WithProvider />);
     const headers = container.getElementsByClassName('table-cell');
-    expect(headers.length).toBe(mockColumnDefs.length);
+    expect(headers.length).toBe(mockColumnDefs.length + 1);
   });
   it('should show sort status on header', () => {
     const { getByTestId, rerender } = render(<WithProvider />);

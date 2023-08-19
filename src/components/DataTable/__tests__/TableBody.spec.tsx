@@ -35,7 +35,7 @@ describe('TableBody Test', () => {
   });
   it('should render Empty table if there is no data', () => {
     const { queryByText } = render(<WithProvider data={[]} />);
-    expect(queryByText('Empty table')).toBeTruthy();
+    expect(queryByText('No data')).toBeTruthy();
   });
   it('should show all data rows', () => {
     const { container } = render(<WithProvider data={mockedData} />);

@@ -3,16 +3,25 @@ import { useDataTableContext } from '../context/DataTableContext';
 import { ColumnDefs, RowValues } from '../types';
 import { TableBodyCell } from './TableBodyCell';
 import { EditableRow } from './EditableRow';
+import { NewRow } from '@/components/DataTable/components/NewRow';
 
 export const TableBody = () => {
-  const { data, columnDefs } = useDataTableContext();
+  const { data, columnDefs, newRow, onRowAdded, cancelNewRow } = useDataTableContext();
 
-  if (!data.length) return <h1>Empty table</h1>;
   return (
     <>
-      {data.map((row, i) => (
-        <TableRow key={i} data={row} columnDefs={columnDefs} />
-      ))}
+      {newRow && onRowAdded && (
+        <NewRow
+          columnDefs={columnDefs}
+          onCancel={cancelNewRow}
+          newRow={newRow}
+          onRowAdded={(values) => {
+            onRowAdded(values);
+            cancelNewRow();
+          }}
+        />
+      )}
+      {data.length ? data.map((row, i) => <TableRow key={i} data={row} columnDefs={columnDefs} />) : <h3>No data</h3>}
     </>
   );
 };
