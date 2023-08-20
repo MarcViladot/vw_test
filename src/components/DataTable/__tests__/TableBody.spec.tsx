@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import { DataTableContext } from '@/components/DataTable/context/DataTableContext';
-import { TableBody } from '@/components/DataTable/TableBody';
+import { TableBody } from '@/components/DataTable/components/TableBody';
+import { ColumnDefs } from '@/components/DataTable';
 
 const mockedData = [
   { name: 'Jose', age: 20 },
@@ -9,9 +10,9 @@ const mockedData = [
   { name: 'Eloi', age: 30 },
 ];
 
-const columnDefs = [
-  { headerName: 'Name', field: 'name' },
-  { headerName: 'Age', field: 'age' },
+const columnDefs: ColumnDefs[] = [
+  { headerName: 'Name', field: 'name', type: 'text' },
+  { headerName: 'Age', field: 'age', type: 'number' },
 ];
 
 describe('TableBody Test', () => {
@@ -24,6 +25,9 @@ describe('TableBody Test', () => {
         toggleSort: vi.fn(),
         handleSearchText: vi.fn(),
         searchText: '',
+        cancelNewRow: vi.fn(),
+        newRow: undefined,
+        addNewRow: vi.fn(),
       }}>
       <TableBody />
     </DataTableContext.Provider>
@@ -34,7 +38,7 @@ describe('TableBody Test', () => {
   });
   it('should render Empty table if there is no data', () => {
     const { queryByText } = render(<WithProvider data={[]} />);
-    expect(queryByText('Empty table')).toBeTruthy();
+    expect(queryByText('No data')).toBeTruthy();
   });
   it('should show all data rows', () => {
     const { container } = render(<WithProvider data={mockedData} />);

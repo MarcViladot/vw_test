@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
 import { DataTableContext } from '@/components/DataTable/context/DataTableContext';
-import { TableSearchBar } from '@/components/DataTable/TableSearchBar';
+import { TableSearchBar } from '@/components/DataTable/components/TableSearchBar';
 
 const handleSearch = vi.fn();
 
@@ -15,6 +15,9 @@ describe('TableSearchBar Test', () => {
         toggleSort: vi.fn(),
         handleSearchText: handleSearch,
         searchText: '',
+        cancelNewRow: vi.fn(),
+        newRow: undefined,
+        addNewRow: vi.fn(),
       }}>
       <TableSearchBar />
     </DataTableContext.Provider>
