@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useDataTableContext } from '../context/DataTableContext';
 import { ColumnDefs, RowValues } from '../types';
-import { TableBodyCell } from './TableBodyCell';
+import { TableBodyCell, TableBodyCellRenderer } from './TableBodyCell';
 import { EditableRow } from './EditableRow';
 import { NewRow } from '@/components/DataTable/components/NewRow';
 import { FaTrash } from 'react-icons/fa6';
@@ -41,7 +41,7 @@ const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
   const { onRowEdit, onRowDeleted } = useDataTableContext();
 
   const rowValues: Array<RowValues<T>> = useMemo(
-    () => columnDefs.map((def) => ({ value: data[def.field], field: def.field, type: def.type })),
+    () => columnDefs.map(({ field, type, cellRenderer }) => ({ value: data[field], field, type, cellRenderer })),
     [data, columnDefs]
   );
 
@@ -62,8 +62,8 @@ const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
 
   return (
     <div className={'table-row'}>
-      {rowValues.map(({ field, value }, i) => (
-        <TableBodyCell key={i}>{String(value)}</TableBodyCell>
+      {rowValues.map(({ field, value, cellRenderer }, i) => (
+        <TableBodyCellRenderer key={i} value={value} cellRenderer={cellRenderer} />
       ))}
       {onRowDeleted && (
         <TableBodyCell>

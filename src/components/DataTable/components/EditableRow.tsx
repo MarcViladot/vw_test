@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Formik } from 'formik';
-import { TableBodyCell } from '@/components/DataTable/components/TableBodyCell';
+import { TableBodyCell, TableBodyCellRenderer } from '@/components/DataTable/components/TableBodyCell';
 import { MdOutlineEdit } from 'react-icons/md';
 import { GiCancel, GiConfirmed } from 'react-icons/gi';
 import { ColType, RowValues } from '../types';
@@ -27,9 +27,9 @@ export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, o
       }}>
       {(formik) => (
         <div className={'table-row'}>
-          {rowValues.map(({ field, value, type }, i) => (
-            <TableBodyCell key={i}>
-              {isEditing ? (
+          {rowValues.map(({ field, value, type, cellRenderer }, i) =>
+            isEditing ? (
+              <TableBodyCell key={i}>
                 <EditableInput
                   colType={type}
                   // @ts-expect-error
@@ -38,11 +38,11 @@ export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, o
                     formik.setFieldValue(field as string, value);
                   }}
                 />
-              ) : (
-                <>{String(value)}</>
-              )}
-            </TableBodyCell>
-          ))}
+              </TableBodyCell>
+            ) : (
+              <TableBodyCellRenderer value={value} key={i} cellRenderer={cellRenderer} />
+            )
+          )}
           <div className={'table-cell border-b py-3.5 px-2 cursor-pointer'}>
             <div className={'flex gap-3 items-center'}>
               {!isEditing ? (

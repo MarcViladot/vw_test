@@ -17,7 +17,12 @@ function App() {
     columnDefs: [
       { headerName: 'Name', field: 'name', type: 'text' },
       { headerName: 'Age', field: 'age', type: 'number' },
-      { headerName: 'Registered', field: 'registered', type: 'date' },
+      {
+        headerName: 'Registered',
+        field: 'registered',
+        type: 'date',
+        cellRenderer: (date: Date) => date.toLocaleString(),
+      },
     ],
     onRowEdit: (values) => {
       console.log(values);

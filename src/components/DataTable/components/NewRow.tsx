@@ -11,7 +11,7 @@ interface Props<T> {
 
 export const NewRow = <T,>({ columnDefs, newRow, onRowAdded, onCancel }: Props<T>) => {
   const rowValues: Array<RowValues<T>> = useMemo(
-    () => columnDefs.map((def) => ({ value: newRow[def.field], field: def.field, type: def.type })),
+    () => columnDefs.map(({ field, type }) => ({ value: newRow[field], field, type })),
     [newRow, columnDefs]
   );
 
