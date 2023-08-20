@@ -1,4 +1,10 @@
 import { SortingState } from './DataTableContext';
+import {
+  DateSortingStrategy,
+  NumberSortingStrategy,
+  SortingStrategy,
+  StringSortingStrategy,
+} from '@/components/DataTable/types/sorting';
 
 export const getNewSortingState = <T>(field: keyof T) => {
   return (prevSorting: SortingState<T> | null) => {
@@ -18,13 +24,17 @@ export const getNewSortingState = <T>(field: keyof T) => {
 
 export const getSortedData = <T>(data: T[], sorting: SortingState<T> | null) => {
   if (!sorting) return data;
-  return [...data].sort((a, b) => {
-    const aValue = a[sorting.field];
-    const bValue = b[sorting.field];
-    if (aValue < bValue) return sorting.direction === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sorting.direction === 'asc' ? 1 : -1;
-    return 0;
-  });
+
+  const sortingStrategyMap: Record<string, SortingStrategy<T>> = {
+    number: new NumberSortingStrategy<T>(sorting),
+    date: new DateSortingStrategy<T>(sorting),
+  };
+
+  const defaultSortingStrategy = new StringSortingStrategy<T>(sorting);
+  const dataType = typeof data[0][sorting.field];
+  const sortingStrategy = sortingStrategyMap[dataType] || defaultSortingStrategy;
+
+  return [...data].sort(sortingStrategy.compare);
 };
 
 export const getFilterData = <T>(data: T[], searchText: string) => {

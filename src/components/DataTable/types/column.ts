@@ -1,4 +1,4 @@
-type ColType = 'text' | 'number';
+export type ColType = 'text' | 'number' | 'date';
 
 export interface ColumnDefs<T = unknown> {
   headerName: string;

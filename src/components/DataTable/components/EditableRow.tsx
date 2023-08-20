@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Formik } from 'formik';
 import { TableBodyCell } from '@/components/DataTable/components/TableBodyCell';
 import { MdOutlineEdit } from 'react-icons/md';
 import { GiCancel, GiConfirmed } from 'react-icons/gi';
-import { RowValues } from '../types';
+import { ColType, RowValues } from '../types';
 import { FaTrash } from 'react-icons/fa6';
+import ReactDatePicker from 'react-datepicker';
 
 interface Props<T = unknown> {
   onSubmit: (values: T) => void;
@@ -29,17 +30,16 @@ export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, o
           {rowValues.map(({ field, value, type }, i) => (
             <TableBodyCell key={i}>
               {isEditing ? (
-                <input
-                  type={type}
-                  className={'border border-gray-200 py-1 px-2'}
+                <EditableInput
+                  colType={type}
                   // @ts-expect-error
-                  value={formik.values[field].toString()}
-                  onChange={(e) => {
-                    formik.setFieldValue(field as string, e.currentTarget.value);
+                  value={formik.values[field]}
+                  onChange={(value) => {
+                    formik.setFieldValue(field as string, value);
                   }}
                 />
               ) : (
-                <>{value}</>
+                <>{JSON.stringify(value)}</>
               )}
             </TableBodyCell>
           ))}
@@ -82,4 +82,37 @@ export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, o
       )}
     </Formik>
   );
+};
+
+interface EditableInputProps {
+  value: unknown;
+  onChange: (value: unknown) => void;
+  colType: ColType;
+}
+
+const EditableInput: FC<EditableInputProps> = ({ colType, value, onChange }) => {
+  switch (colType) {
+    case 'text':
+    case 'number':
+      return (
+        <input
+          type={colType}
+          className={'border border-gray-200 py-1 px-2'}
+          value={value as string}
+          onChange={(e) => {
+            const value = colType === 'number' ? Number(e.currentTarget.value) : e.currentTarget.value;
+            onChange(value);
+          }}
+        />
+      );
+    case 'date':
+      return (
+        <ReactDatePicker
+          selected={value as Date}
+          onChange={(date: Date) => {
+            onChange(date);
+          }}
+        />
+      );
+  }
 };
