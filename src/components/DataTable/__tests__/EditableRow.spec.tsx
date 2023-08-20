@@ -8,7 +8,7 @@ const initialValues = {
   field2: 'Value 2',
 };
 
-const rowValues: RowValues[] = [
+const rowValues: Array<RowValues<typeof initialValues>> = [
   { field: 'field1', value: 'Value 1', type: 'text' },
   { field: 'field2', value: 'Value 2', type: 'text' },
 ];

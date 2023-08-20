@@ -1,32 +1,14 @@
 import React from 'react';
-import { ColumnDefs } from './types';
 import { DataTableProvider } from './context/DataTableContext';
 import { TableHeader, TableBody, TableUtilities } from './components';
+import { TableOptions } from './types';
 
 interface DataTableProps<T = unknown> {
-  data: T[];
-  columnDefs: ColumnDefs[];
-  onRowEdit?: (values: T) => void;
-  onRowAdded?: (values: Partial<T>) => void;
-  onRowDeleted?: ({ row, data }: { row: number; data: T }) => void;
-  newRowModel?: Partial<T>;
+  options: TableOptions<T>;
 }
 
-export const DataTable = <T,>({
-  data,
-  columnDefs,
-  onRowEdit,
-  newRowModel,
-  onRowAdded,
-  onRowDeleted,
-}: DataTableProps<T>) => (
-  <DataTableProvider
-    data={data}
-    columnDefs={columnDefs}
-    onRowEdit={onRowEdit}
-    onRowDeleted={onRowDeleted}
-    onRowAdded={onRowAdded}
-    newRowModel={newRowModel}>
+export const DataTable = <T,>({ options }: DataTableProps<T>) => (
+  <DataTableProvider {...options}>
     <div className={'flex flex-col flex-grow gap-4'}>
       <TableUtilities />
       <div className={'table table-fixed w-full'}>

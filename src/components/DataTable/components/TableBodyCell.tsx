@@ -1,7 +1,7 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 interface Props {
-  children: ReactElement;
+  children: ReactNode;
 }
 
 export const TableBodyCell: FC<Props> = ({ children }) => {

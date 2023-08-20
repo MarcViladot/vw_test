@@ -1,7 +1,7 @@
 type ColType = 'text' | 'number';
 
-export interface ColumnDefs {
+export interface ColumnDefs<T = unknown> {
   headerName: string;
-  field: string;
+  field: keyof T;
   type: ColType;
 }

@@ -1,7 +1,7 @@
 import { ColumnDefs } from './column';
 
-export interface RowValues {
+export interface RowValues<T = unknown> {
   value: unknown;
-  field: string;
+  field: keyof T;
   type: ColumnDefs['type'];
 }

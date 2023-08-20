@@ -4,19 +4,24 @@ import { DataTableContext } from '@/components/DataTable/context/DataTableContex
 import { TableBody } from '@/components/DataTable/components/TableBody';
 import { ColumnDefs } from '@/components/DataTable';
 
-const mockedData = [
+interface Model {
+  name: string;
+  age: number;
+}
+
+const mockedData: Model[] = [
   { name: 'Jose', age: 20 },
   { name: 'Pol', age: 85 },
   { name: 'Eloi', age: 30 },
 ];
 
-const columnDefs: ColumnDefs[] = [
+const columnDefs: Array<ColumnDefs<Model>> = [
   { headerName: 'Name', field: 'name', type: 'text' },
   { headerName: 'Age', field: 'age', type: 'number' },
 ];
 
 describe('TableBody Test', () => {
-  const WithProvider = ({ data }: { data: unknown[] }) => (
+  const WithProvider = ({ data }: { data: Model[] }) => (
     <DataTableContext.Provider
       value={{
         data,
