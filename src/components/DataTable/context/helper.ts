@@ -23,18 +23,29 @@ export const getNewSortingState = <T>(field: keyof T) => {
 };
 
 export const getSortedData = <T>(data: T[], sorting: SortingState<T> | null) => {
-  if (!sorting) return data;
+  try {
+    if (!sorting) return data;
 
-  const sortingStrategyMap: Record<string, SortingStrategy<T>> = {
-    number: new NumberSortingStrategy<T>(sorting),
-    date: new DateSortingStrategy<T>(sorting),
-  };
+    const sortingStrategyMap: Record<string, SortingStrategy<T>> = {
+      string: new StringSortingStrategy<T>(sorting),
+      number: new NumberSortingStrategy<T>(sorting),
+      date: new DateSortingStrategy<T>(sorting),
+    };
 
-  const defaultSortingStrategy = new StringSortingStrategy<T>(sorting);
-  const dataType = typeof data[0][sorting.field];
-  const sortingStrategy = sortingStrategyMap[dataType] || defaultSortingStrategy;
+    const fieldValue = data[0][sorting.field];
+    let sortingStrategy: SortingStrategy<T>;
 
-  return [...data].sort(sortingStrategy.compare);
+    if (fieldValue instanceof Date) {
+      sortingStrategy = sortingStrategyMap.date;
+    } else {
+      sortingStrategy = sortingStrategyMap[typeof fieldValue] || sortingStrategyMap.string;
+    }
+
+    return [...data].sort(sortingStrategy.compare);
+  } catch (e) {
+    console.error(e);
+    return data;
+  }
 };
 
 export const getFilterData = <T>(data: T[], searchText: string) => {
