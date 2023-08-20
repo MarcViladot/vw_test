@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useDataTableContext } from '../context/DataTableContext';
 import { ColumnDefs, RowValues } from '../types';
 import { TableBodyCell } from './TableBodyCell';
@@ -6,7 +6,7 @@ import { EditableRow } from './EditableRow';
 import { NewRow } from '@/components/DataTable/components/NewRow';
 import { FaTrash } from 'react-icons/fa6';
 
-export const TableBody = () => {
+export const TableBody = <T,>() => {
   const { data, columnDefs, newRow, onRowAdded, cancelNewRow } = useDataTableContext();
 
   return (
@@ -23,7 +23,7 @@ export const TableBody = () => {
         />
       )}
       {data.length ? (
-        data.map((row, i) => <TableRow rowIndex={i} key={i} data={row} columnDefs={columnDefs} />)
+        data.map((row, i) => <TableRow<T> rowIndex={i} key={i} data={row} columnDefs={columnDefs} />)
       ) : (
         <h3>No data</h3>
       )}
@@ -31,16 +31,16 @@ export const TableBody = () => {
   );
 };
 
-interface TableRowProps {
+interface TableRowProps<T> {
   rowIndex: number;
-  data: unknown;
-  columnDefs: ColumnDefs[];
+  data: T;
+  columnDefs: Array<ColumnDefs<T>>;
 }
 
-const TableRow: FC<TableRowProps> = ({ data, columnDefs, rowIndex }) => {
+const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
   const { onRowEdit, onRowDeleted } = useDataTableContext();
 
-  const rowValues: RowValues[] = useMemo(
+  const rowValues: Array<RowValues<T>> = useMemo(
     () => columnDefs.map((def) => ({ value: data[def.field], field: def.field, type: def.type })),
     [data, columnDefs]
   );
@@ -51,10 +51,10 @@ const TableRow: FC<TableRowProps> = ({ data, columnDefs, rowIndex }) => {
 
   if (onRowEdit) {
     return (
-      <EditableRow
+      <EditableRow<T>
         onSubmit={onRowEdit}
         onDelete={onRowDeleted ? handleRowDelete : undefined}
-        initialValues={{ ...(data as object) }}
+        initialValues={data}
         rowValues={rowValues}
       />
     );
@@ -63,7 +63,8 @@ const TableRow: FC<TableRowProps> = ({ data, columnDefs, rowIndex }) => {
   return (
     <div className={'table-row'}>
       {rowValues.map(({ field, value }, i) => (
-        <TableBodyCell key={i}>{value}</TableBodyCell>
+        // TODO replace stringify
+        <TableBodyCell key={i}>{JSON.stringify(value)}</TableBodyCell>
       ))}
       {onRowDeleted && (
         <TableBodyCell>

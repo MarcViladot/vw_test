@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { TableBodyCell } from '@/components/DataTable/components/TableBodyCell';
 import { MdOutlineEdit } from 'react-icons/md';
@@ -6,23 +6,23 @@ import { GiCancel, GiConfirmed } from 'react-icons/gi';
 import { RowValues } from '../types';
 import { FaTrash } from 'react-icons/fa6';
 
-interface Props {
-  onSubmit: (values: unknown) => void;
+interface Props<T = unknown> {
+  onSubmit: (values: T) => void;
   onCancel?: () => void;
   onDelete?: () => void;
-  initialValues: any;
-  rowValues: RowValues[];
+  initialValues: T;
+  rowValues: Array<RowValues<T>>;
   editing?: boolean;
 }
 
-export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues, editing, onCancel, onDelete }) => {
+export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, onCancel, onDelete }: Props<T>) => {
   const [isEditing, setIsEditing] = useState(editing ?? false);
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={initialValues as object}
       onSubmit={(values) => {
-        onSubmit(values);
+        onSubmit(values as T);
       }}>
       {(formik) => (
         <div className={'table-row'}>
@@ -32,9 +32,10 @@ export const EditableRow: FC<Props> = ({ onSubmit, rowValues, initialValues, edi
                 <input
                   type={type}
                   className={'border border-gray-200 py-1 px-2'}
+                  // @ts-expect-error
                   value={formik.values[field].toString()}
                   onChange={(e) => {
-                    formik.setFieldValue(field, e.currentTarget.value);
+                    formik.setFieldValue(field as string, e.currentTarget.value);
                   }}
                 />
               ) : (

@@ -1,27 +1,24 @@
-import { createContext, FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
-import { ColumnDefs } from '@/components/DataTable';
+import { createContext, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+import { TableOptions } from '../types';
+import { getFilterData, getNewSortingState, getSortedData } from './helper';
 
-export interface SortingState {
-  field: string;
+export interface SortingState<T> {
+  field: keyof T;
   direction: 'asc' | 'desc';
 }
 
-interface ContextValue {
-  data: unknown[];
-  columnDefs: ColumnDefs[];
-  sorting: null | SortingState;
-  toggleSort: (field: string) => void;
+interface ContextValue<T> extends Omit<TableOptions<T>, 'newRowModel'> {
+  sorting: null | SortingState<T>;
+  toggleSort: (field: keyof T) => void;
   searchText: string;
   handleSearchText: (text: string) => void;
-  newRow: unknown | undefined;
+  newRow: Partial<T> | undefined;
   addNewRow: () => void;
   cancelNewRow: () => void;
-  onRowEdit?: (values: unknown) => void;
-  onRowAdded?: (values: unknown) => void;
-  onRowDeleted?: ({ row, data }: { row: number; data: unknown }) => void;
 }
 
-export const DataTableContext = createContext<ContextValue>({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const DataTableContext = createContext<ContextValue<any>>({
   data: [],
   columnDefs: [],
   sorting: null,
@@ -33,17 +30,11 @@ export const DataTableContext = createContext<ContextValue>({
   cancelNewRow: () => null,
 });
 
-interface ProviderProps<T = unknown> {
-  data: T[];
-  columnDefs: ColumnDefs[];
-  onRowEdit?: (values: T) => void;
+interface ProviderProps<T> extends TableOptions<T> {
   children: ReactElement;
-  newRowModel?: Partial<T>;
-  onRowAdded?: (values: Partial<T>) => void;
-  onRowDeleted?: ({ row, data }: { row: number; data: T }) => void;
 }
 
-export const DataTableProvider: FC<ProviderProps> = ({
+export const DataTableProvider = <T,>({
   children,
   data,
   columnDefs,
@@ -51,52 +42,18 @@ export const DataTableProvider: FC<ProviderProps> = ({
   newRowModel,
   onRowAdded,
   onRowDeleted,
-}) => {
-  const [sorting, setSorting] = useState<SortingState | null>(null);
+}: ProviderProps<T>) => {
+  const [sorting, setSorting] = useState<SortingState<T> | null>(null);
   const [searchText, setSearchText] = useState('');
 
-  const [newRow, setNewRow] = useState<Partial<unknown>>();
+  const [newRow, setNewRow] = useState<Partial<T>>();
 
-  const toggleSort = (field: string) => {
-    setSorting((prevSorting) => {
-      if (prevSorting?.field !== field) {
-        return {
-          field,
-          direction: 'asc',
-        };
-      }
-      if (prevSorting?.direction === 'desc') return null;
-      return {
-        ...prevSorting,
-        direction: 'desc',
-      };
-    });
-  };
+  const toggleSort = useCallback((field: keyof T) => {
+    setSorting(getNewSortingState(field));
+  }, []);
 
-  const sortedData = useMemo(() => {
-    if (!sorting) return data;
-    return [...data].sort((a, b) => {
-      // @ts-expect-error
-      const aValue = a[sorting.field];
-      // @ts-expect-error
-      const bValue = b[sorting.field];
-      if (aValue < bValue) return sorting.direction === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sorting.direction === 'asc' ? 1 : -1;
-      return 0;
-    });
-  }, [data, sorting]);
-
-  const filteredData = useMemo(() => {
-    if (!searchText) return sortedData;
-    return sortedData.filter((item) => {
-      const concatenatedValues = Object.values(item)
-        .map((value) => value.toString())
-        .join('')
-        .toLowerCase();
-
-      return concatenatedValues.includes(searchText.toLowerCase());
-    });
-  }, [searchText, sortedData]);
+  const sortedData = useMemo(() => getSortedData(data, sorting), [data, sorting]);
+  const filteredData = useMemo(() => getFilterData(sortedData, searchText), [searchText, sortedData]);
 
   const addNewRow = useCallback(() => {
     setNewRow(newRowModel);
@@ -106,25 +63,22 @@ export const DataTableProvider: FC<ProviderProps> = ({
     setNewRow(undefined);
   }, []);
 
-  return (
-    <DataTableContext.Provider
-      value={{
-        data: filteredData,
-        columnDefs,
-        sorting,
-        toggleSort,
-        handleSearchText: setSearchText,
-        searchText,
-        onRowEdit,
-        addNewRow,
-        newRow,
-        onRowAdded,
-        cancelNewRow,
-        onRowDeleted,
-      }}>
-      {children}
-    </DataTableContext.Provider>
-  );
+  const contextValue: ContextValue<T> = {
+    data: filteredData,
+    columnDefs,
+    toggleSort,
+    sorting,
+    handleSearchText: setSearchText,
+    searchText,
+    onRowEdit,
+    addNewRow,
+    newRow,
+    onRowAdded,
+    cancelNewRow,
+    onRowDeleted,
+  };
+
+  return <DataTableContext.Provider value={contextValue}>{children}</DataTableContext.Provider>;
 };
 
 export const useDataTableContext = () => useContext(DataTableContext);

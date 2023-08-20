@@ -5,7 +5,12 @@ import { DataTableContext, SortingState } from '@/components/DataTable/context/D
 import { FC } from 'react';
 import { ColumnDefs } from '@/components/DataTable';
 
-const mockColumnDefs: ColumnDefs[] = [
+interface Model {
+  name: string;
+  age: number;
+}
+
+const mockColumnDefs: Array<ColumnDefs<Model>> = [
   { headerName: 'Name', field: 'name', type: 'text' },
   { headerName: 'Age', field: 'age', type: 'number' },
 ];

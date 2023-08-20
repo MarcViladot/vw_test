@@ -1,15 +1,15 @@
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { ColumnDefs } from '@/components/DataTable/types';
 import { useDataTableContext } from '@/components/DataTable/context/DataTableContext';
 import { FaArrowDownLong, FaArrowUpLong } from 'react-icons/fa6';
 
-export const TableHeader = () => {
+export const TableHeader = <T,>() => {
   const { columnDefs } = useDataTableContext();
   return (
     <>
       <div className={'table-row'}>
-        {columnDefs.map((def) => (
-          <HeaderCell {...def} key={def.field} />
+        {columnDefs.map((def: ColumnDefs<T>, i) => (
+          <HeaderCell<T> {...def} key={i} />
         ))}
         <div className={'table-cell cursor-pointer p-1 px-2 bg-[#F1F3FA]'}>
           <div className={'flex justify-between items-center text-sm font-bold text-[#ACB1C5]'}>Actions</div>
@@ -19,7 +19,7 @@ export const TableHeader = () => {
   );
 };
 
-const HeaderCell: FC<ColumnDefs> = ({ headerName, field }) => {
+const HeaderCell = <T,>({ headerName, field }: ColumnDefs<T>) => {
   const { toggleSort, sorting } = useDataTableContext();
 
   const sortDirection = useMemo(() => (sorting?.field === field ? sorting.direction : ''), [sorting, field]);

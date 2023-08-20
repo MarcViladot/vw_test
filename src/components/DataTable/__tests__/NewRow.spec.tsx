@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { NewRow } from '../components';
 import { ColumnDefs } from '../types';
 
-const columnDefs: ColumnDefs[] = [
+const columnDefs: Array<ColumnDefs<{ name: string; age: number }>> = [
   { field: 'name', type: 'text', headerName: 'Name' },
   { field: 'age', type: 'number', headerName: 'Age' },
 ];
