@@ -39,7 +39,7 @@ export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, o
                   }}
                 />
               ) : (
-                <>{JSON.stringify(value)}</>
+                <>{String(value)}</>
               )}
             </TableBodyCell>
           ))}

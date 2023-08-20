@@ -63,8 +63,7 @@ const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
   return (
     <div className={'table-row'}>
       {rowValues.map(({ field, value }, i) => (
-        // TODO replace stringify
-        <TableBodyCell key={i}>{JSON.stringify(value)}</TableBodyCell>
+        <TableBodyCell key={i}>{String(value)}</TableBodyCell>
       ))}
       {onRowDeleted && (
         <TableBodyCell>
