@@ -1,6 +1,7 @@
 import { ColumnDefs, RowValues } from '../types';
 import React, { useMemo } from 'react';
 import { EditableRow } from './EditableRow';
+import { getRowValues } from '@/components/DataTable/utils/row';
 
 interface Props<T> {
   newRow: T;
@@ -9,19 +10,8 @@ interface Props<T> {
   onCancel: () => void;
 }
 
-export const NewRow = <T,>({ columnDefs, newRow, onRowAdded, onCancel }: Props<T>) => {
-  const rowValues: Array<RowValues<T>> = useMemo(
-    () => columnDefs.map((def) => ({ value: newRow[def.field], field: def.field, type: def.type })),
-    [newRow, columnDefs]
-  );
+export const NewRow = <T,>({ columnDefs, newRow, onRowAdded, ...rest }: Props<T>) => {
+  const rowValues: Array<RowValues<T>> = useMemo(() => getRowValues(newRow, columnDefs), [newRow, columnDefs]);
 
-  return (
-    <EditableRow
-      onCancel={onCancel}
-      onSubmit={onRowAdded}
-      initialValues={newRow}
-      rowValues={rowValues}
-      editing={true}
-    />
-  );
+  return <EditableRow onSubmit={onRowAdded} initialValues={newRow} rowValues={rowValues} editing={true} {...rest} />;
 };

@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { useDataTableContext } from '../context/DataTableContext';
 import { ColumnDefs, RowValues } from '../types';
-import { TableBodyCell } from './TableBodyCell';
+import { TableBodyCell, TableBodyCellRenderer } from './TableBodyCell';
 import { EditableRow } from './EditableRow';
 import { NewRow } from '@/components/DataTable/components/NewRow';
-import { FaTrash } from 'react-icons/fa6';
+import { FaEye, FaTrash } from 'react-icons/fa6';
+import { getRowValues } from '@/components/DataTable/utils/row';
 
 export const TableBody = <T,>() => {
   const { data, columnDefs, newRow, onRowAdded, cancelNewRow } = useDataTableContext();
@@ -38,39 +39,45 @@ interface TableRowProps<T> {
 }
 
 const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
-  const { onRowEdit, onRowDeleted } = useDataTableContext();
+  const { onRowEdit, onRowDelete, onRowPreview } = useDataTableContext();
 
-  const rowValues: Array<RowValues<T>> = useMemo(
-    () => columnDefs.map((def) => ({ value: data[def.field], field: def.field, type: def.type })),
-    [data, columnDefs]
-  );
+  const rowValues: Array<RowValues<T>> = useMemo(() => getRowValues(data, columnDefs), [data, columnDefs]);
 
   const handleRowDelete = () => {
-    onRowDeleted?.({ row: rowIndex, data });
+    onRowDelete?.({ row: rowIndex, data });
   };
 
   if (onRowEdit) {
     return (
       <EditableRow<T>
         onSubmit={onRowEdit}
-        onDelete={onRowDeleted ? handleRowDelete : undefined}
+        onDelete={onRowDelete ? handleRowDelete : undefined}
         initialValues={data}
         rowValues={rowValues}
+        onRowPreview={onRowPreview}
       />
     );
   }
 
   return (
     <div className={'table-row'}>
-      {rowValues.map(({ field, value }, i) => (
-        // TODO replace stringify
-        <TableBodyCell key={i}>{JSON.stringify(value)}</TableBodyCell>
+      {rowValues.map(({ field, value, cellRenderer }, i) => (
+        <TableBodyCellRenderer key={i} value={value} cellRenderer={cellRenderer} />
       ))}
-      {onRowDeleted && (
-        <TableBodyCell>
-          <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={handleRowDelete} />
-        </TableBodyCell>
-      )}
+      <TableBodyCell>
+        <div className={'flex gap-3 items-center'}>
+          {onRowDelete && <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={handleRowDelete} />}
+          {onRowPreview && (
+            <FaEye
+              data-testid={'trash-icon'}
+              className={'cursor-pointer'}
+              onClick={() => {
+                onRowPreview(data);
+              }}
+            />
+          )}
+        </div>
+      </TableBodyCell>
     </div>
   );
 };

@@ -5,6 +5,7 @@ export interface TableOptions<T = unknown> {
   columnDefs: Array<ColumnDefs<T>>;
   onRowEdit?: (values: T) => void;
   onRowAdded?: (values: Partial<T>) => void;
-  onRowDeleted?: ({ row, data }: { row: number; data: T }) => void;
+  onRowDelete?: ({ row, data }: { row: number; data: T }) => void;
+  onRowPreview?: (values: T) => void;
   newRowModel?: Partial<T>;
 }

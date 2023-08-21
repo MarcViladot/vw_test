@@ -36,9 +36,9 @@ const HeaderCell = <T,>({ headerName, field }: ColumnDefs<T>) => {
         {sortDirection && (
           <div data-testid={'sort-status'}>
             {sortDirection === 'asc' ? (
-              <FaArrowDownLong data-testid={'arrow-up'} />
+              <FaArrowUpLong data-testid={'arrow-up'} />
             ) : (
-              <FaArrowUpLong data-testid={'arrow-down'} />
+              <FaArrowDownLong data-testid={'arrow-down'} />
             )}
           </div>
         )}

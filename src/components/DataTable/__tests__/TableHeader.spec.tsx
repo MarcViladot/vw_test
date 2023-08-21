@@ -18,7 +18,7 @@ const mockColumnDefs: Array<ColumnDefs<Model>> = [
 const toggleSort = vi.fn();
 
 describe('TableHeader Test', () => {
-  const WithProvider: FC<{ sorting?: SortingState }> = ({ sorting }) => (
+  const WithProvider: FC<{ sorting?: SortingState<Model> }> = ({ sorting }) => (
     <DataTableContext.Provider
       value={{
         data: [],

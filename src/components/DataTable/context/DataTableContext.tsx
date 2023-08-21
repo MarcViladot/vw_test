@@ -34,15 +34,7 @@ interface ProviderProps<T> extends TableOptions<T> {
   children: ReactElement;
 }
 
-export const DataTableProvider = <T,>({
-  children,
-  data,
-  columnDefs,
-  onRowEdit,
-  newRowModel,
-  onRowAdded,
-  onRowDeleted,
-}: ProviderProps<T>) => {
+export const DataTableProvider = <T,>({ children, data, newRowModel, ...rest }: ProviderProps<T>) => {
   const [sorting, setSorting] = useState<SortingState<T> | null>(null);
   const [searchText, setSearchText] = useState('');
 
@@ -65,17 +57,14 @@ export const DataTableProvider = <T,>({
 
   const contextValue: ContextValue<T> = {
     data: filteredData,
-    columnDefs,
     toggleSort,
     sorting,
     handleSearchText: setSearchText,
     searchText,
-    onRowEdit,
     addNewRow,
     newRow,
-    onRowAdded,
     cancelNewRow,
-    onRowDeleted,
+    ...rest,
   };
 
   return <DataTableContext.Provider value={contextValue}>{children}</DataTableContext.Provider>;
