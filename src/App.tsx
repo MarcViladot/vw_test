@@ -10,9 +10,9 @@ function App() {
   const options: TableOptions<Person> = {
     newRowModel: { name: '', age: 0, registered: new Date() },
     data: [
-      { name: 'Jose', age: 20, registered: new Date(1290250220) },
-      { name: 'Pol', age: 85, registered: new Date(1676737164) },
-      { name: 'Eloi', age: 30, registered: new Date(1661990970) },
+      { name: 'Jose', age: 20, registered: new Date(1290250220 * 1000) },
+      { name: 'Pol', age: 85, registered: new Date(1676737164 * 1000) },
+      { name: 'Eloi', age: 30, registered: new Date(1661990970 * 1000) },
     ],
     columnDefs: [
       { headerName: 'Name', field: 'name', type: 'text' },
@@ -30,7 +30,10 @@ function App() {
     onRowAdded: (values) => {
       console.log(values);
     },
-    onRowDeleted: (values) => {
+    onRowDelete: (values) => {
+      console.log(values);
+    },
+    onRowPreview: (values) => {
       console.log(values);
     },
   };

@@ -4,19 +4,28 @@ import { TableBodyCell, TableBodyCellRenderer } from '@/components/DataTable/com
 import { MdOutlineEdit } from 'react-icons/md';
 import { GiCancel, GiConfirmed } from 'react-icons/gi';
 import { ColType, RowValues } from '../types';
-import { FaTrash } from 'react-icons/fa6';
+import { FaEye, FaTrash } from 'react-icons/fa6';
 import ReactDatePicker from 'react-datepicker';
 
 interface Props<T = unknown> {
   onSubmit: (values: T) => void;
   onCancel?: () => void;
   onDelete?: () => void;
+  onRowPreview?: (values: T) => void;
   initialValues: T;
   rowValues: Array<RowValues<T>>;
   editing?: boolean;
 }
 
-export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, onCancel, onDelete }: Props<T>) => {
+export const EditableRow = <T,>({
+  onSubmit,
+  rowValues,
+  initialValues,
+  editing,
+  onCancel,
+  onDelete,
+  onRowPreview,
+}: Props<T>) => {
   const [isEditing, setIsEditing] = useState(editing ?? false);
 
   return (
@@ -43,7 +52,7 @@ export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, o
               <TableBodyCellRenderer value={value} key={i} cellRenderer={cellRenderer} />
             )
           )}
-          <div className={'table-cell border-b py-3.5 px-2 cursor-pointer'}>
+          <TableBodyCell>
             <div className={'flex gap-3 items-center'}>
               {!isEditing ? (
                 <>
@@ -55,6 +64,15 @@ export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, o
                     }}
                   />
                   {onDelete && <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={onDelete} />}
+                  {onRowPreview && (
+                    <FaEye
+                      data-testid={'trash-icon'}
+                      className={'cursor-pointer'}
+                      onClick={() => {
+                        onRowPreview(initialValues);
+                      }}
+                    />
+                  )}
                 </>
               ) : (
                 <>
@@ -77,7 +95,7 @@ export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, o
                 </>
               )}
             </div>
-          </div>
+          </TableBodyCell>
         </div>
       )}
     </Formik>
