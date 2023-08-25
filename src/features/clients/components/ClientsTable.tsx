@@ -6,9 +6,10 @@ import { updateClient } from '@/features/clients/api/updateClient';
 
 interface Props {
   clients: Client[] | undefined;
+  onClientSelected: (client: Client) => void;
 }
 
-export const ClientsTable: FC<Props> = ({ clients }) => {
+export const ClientsTable: FC<Props> = ({ clients, onClientSelected }) => {
   const queryClient = useQueryClient();
 
   const updateClientMutation = useMutation<Client, void, { id: number; data: Client }>({
@@ -29,7 +30,8 @@ export const ClientsTable: FC<Props> = ({ clients }) => {
     onRowEdit: (data: Client) => {
       updateClientMutation.mutate({ id: data.id, data });
     },
+    onRowPreview: onClientSelected,
   };
 
-  return <DataTable options={tableOptions}></DataTable>;
+  return <DataTable options={tableOptions} />;
 };
