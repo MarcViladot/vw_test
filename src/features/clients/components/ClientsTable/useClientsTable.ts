@@ -1,17 +1,9 @@
-import React, { FC } from 'react';
-import { Client } from '../types';
-import { DataTable, TableOptions } from '@/components/DataTable';
 import { useMutation, useQueryClient } from 'react-query';
-import { updateClient } from '@/features/clients/api/updateClient';
-import { deleteClient } from '@/features/clients/api/deleteClient';
-import { createClient } from '@/features/clients/api/createClient';
+import { TableOptions } from '@/components/DataTable';
+import { Client } from '../../types';
+import { updateClient, createClient, deleteClient } from '../../api';
 
-interface Props {
-  clients: Client[] | undefined;
-  onClientSelected: (client: Client) => void;
-}
-
-export const ClientsTable: FC<Props> = ({ clients, onClientSelected }) => {
+export const useClientsTable = (clients: Client[] | undefined, onClientSelected: (client: Client) => void) => {
   const queryClient = useQueryClient();
 
   const updateClientMutation = useMutation<Client, void, { id: number; data: Client }>({
@@ -59,6 +51,5 @@ export const ClientsTable: FC<Props> = ({ clients, onClientSelected }) => {
     },
     onRowPreview: onClientSelected,
   };
-
-  return <DataTable options={tableOptions} />;
+  return tableOptions;
 };

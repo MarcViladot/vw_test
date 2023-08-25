@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { ClientsTable } from '../components/ClientsTable';
+import { ClientDetail } from '../components/ClientDetail';
 import { getClientsList } from '../api/getClientsList';
-import { Client } from '@/features/clients';
-import { ClientDetail } from '@/features/clients/components/ClientDetail';
+import { Client } from '../types';
 
 export const Clients = () => {
   const { data: clients } = useQuery(['clients'], getClientsList);
