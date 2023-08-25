@@ -46,6 +46,11 @@ export const clientHandlers = [
     clients[clientIndex] = { ...clients[clientIndex], ...newClientData };
     return await res(ctx.status(200), ctx.json(newClientData));
   }),
+  rest.post(`${environment.baseApiUrl}/clients`, async (req, res, ctx) => {
+    const newClientData = await req.json();
+    clients.push(newClientData);
+    return await res(ctx.status(200), ctx.json(newClientData));
+  }),
   rest.delete(`${environment.baseApiUrl}/clients/:id`, async (req, res, ctx) => {
     const { id } = req.params;
     const clientIndex = clients.findIndex((client) => client.id === Number(id));
