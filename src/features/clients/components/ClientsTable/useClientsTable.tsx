@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { TableOptions } from '@/components/DataTable';
 import { Client } from '../../types';
 import { updateClient, createClient, deleteClient } from '../../api';
+import { calculateAge } from '@/features/clients/utils/date';
 
 export const useClientsTable = (clients: Client[] | undefined, onClientSelected: (client: Client) => void) => {
   const queryClient = useQueryClient();
@@ -33,7 +34,20 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
     data: clients ?? [],
     columnDefs: [
       { headerName: 'Name', field: 'name', type: 'text' },
-      { headerName: 'Age', field: 'age', type: 'number' },
+      { headerName: 'Last Name', field: 'lastName', type: 'text' },
+      {
+        headerName: 'Age',
+        field: 'born',
+        type: 'date',
+        cellRenderer: (value: Date) => <div>{calculateAge(value)}</div>,
+      },
+      { headerName: 'Partners', field: 'partners', type: 'number' },
+      {
+        headerName: 'Active',
+        field: 'active',
+        type: 'text',
+        cellRenderer: (value: boolean) => <div>{value ? 'Yes' : 'No'}</div>,
+      },
     ],
     onRowEdit: (data: Client) => {
       updateClientMutation.mutate({ id: data.id, data });
@@ -46,7 +60,9 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
     },
     newRowModel: {
       name: '',
-      age: 0,
+      born: new Date(),
+      partners: 0,
+      active: false,
       image: 'https://placehold.co/200x200',
     },
     onRowPreview: onClientSelected,

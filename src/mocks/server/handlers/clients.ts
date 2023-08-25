@@ -1,39 +1,37 @@
 import { rest } from 'msw';
 import environment from '@/environment';
 import { Client } from '@/features/clients';
+import { faker } from '@faker-js/faker';
 
-const clients: Client[] = [
-  {
-    id: 1,
-    name: 'Sarah Mikkelsen',
-    age: 20,
-    image: 'https://i.pravatar.cc/150?img=6',
-  },
-  {
-    id: 2,
-    name: 'John Doe',
-    age: 40,
-    image: 'https://i.pravatar.cc/150?img=27',
-  },
-  {
-    id: 3,
-    name: 'Jane Doe',
-    age: 50,
-    image: 'https://i.pravatar.cc/150?img=66',
-  },
-  {
-    id: 4,
-    name: 'Mira Levin',
-    age: 60,
-    image: 'https://i.pravatar.cc/150?img=69',
-  },
-  {
-    id: 5,
-    name: 'Emma Carbon',
-    age: 12,
-    image: 'https://i.pravatar.cc/150?img=52',
-  },
-];
+function generateUser(id: number): Client {
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const born = faker.date.between(99).toISOString();
+  const partners = Math.floor(Math.random() * 1000) + 1;
+  const image = `https://i.pravatar.cc/150?img=${id}`;
+  const active = Math.random() < 0.5; // 50% chance of being active
+
+  return {
+    id,
+    name: firstName,
+    partners,
+    lastName,
+    born,
+    image,
+    active,
+  };
+}
+
+function generateClientsList(count: number): Client[] {
+  const userList: Client[] = [];
+  for (let i = 0; i < count; i++) {
+    const user = generateUser(i);
+    userList.push(user);
+  }
+  return userList;
+}
+
+const clients = generateClientsList(10);
 
 export const clientHandlers = [
   rest.get(`${environment.baseApiUrl}/clients`, async (req, res, ctx) => {

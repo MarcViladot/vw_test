@@ -1,6 +1,9 @@
 export interface Client {
   id: number;
   name: string;
-  age: number;
+  lastName: string;
+  partners: number;
+  active: boolean;
+  born: string | Date;
   image: string;
 }
