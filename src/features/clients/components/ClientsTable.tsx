@@ -3,6 +3,7 @@ import { Client } from '../types';
 import { DataTable, TableOptions } from '@/components/DataTable';
 import { useMutation, useQueryClient } from 'react-query';
 import { updateClient } from '@/features/clients/api/updateClient';
+import { deleteClient } from '@/features/clients/api/deleteClient';
 
 interface Props {
   clients: Client[] | undefined;
@@ -21,6 +22,13 @@ export const ClientsTable: FC<Props> = ({ clients, onClientSelected }) => {
     },
   });
 
+  const deleteClientMutation = useMutation<Client, void, number>({
+    mutationFn: deleteClient,
+    onSuccess: () => {
+      queryClient.invalidateQueries('clients');
+    },
+  });
+
   const tableOptions: TableOptions<Client> = {
     data: clients ?? [],
     columnDefs: [
@@ -29,6 +37,9 @@ export const ClientsTable: FC<Props> = ({ clients, onClientSelected }) => {
     ],
     onRowEdit: (data: Client) => {
       updateClientMutation.mutate({ id: data.id, data });
+    },
+    onRowDelete: ({ data }) => {
+      deleteClientMutation.mutate(data.id);
     },
     onRowPreview: onClientSelected,
   };
