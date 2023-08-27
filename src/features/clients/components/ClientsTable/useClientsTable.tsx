@@ -19,6 +19,7 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
   const createClientMutation = useMutation<Client, void, Partial<Client>>({
     mutationFn: createClient,
     onSuccess: () => {
+      console.log('hola');
       queryClient.invalidateQueries('clients'); // Invalidate and refetch the 'clients' query
     },
   });
@@ -49,21 +50,18 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
         cellRenderer: (value: boolean) => <div>{value ? 'Yes' : 'No'}</div>,
       },
     ],
-    onRowEdit: (data: Client) => {
-      updateClientMutation.mutate({ id: data.id, data });
+    onRowEdit: (data: Client, onSuccess) => {
+      updateClientMutation.mutateAsync({ id: data.id, data }).then(onSuccess);
     },
     onRowDelete: ({ data }) => {
       deleteClientMutation.mutate(data.id);
     },
-    onRowAdded: (data) => {
-      createClientMutation.mutate(data);
-    },
-    newRowModel: {
-      name: '',
-      born: new Date(),
-      partners: 0,
-      active: false,
-      image: 'https://placehold.co/200x200',
+    onRowAdded: (data, onSuccess) => {
+      console.log(data);
+      createClientMutation.mutateAsync(data).then(() => {
+        console.log('hola');
+        onSuccess();
+      });
     },
     onRowPreview: onClientSelected,
   };

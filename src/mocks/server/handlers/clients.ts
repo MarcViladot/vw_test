@@ -46,7 +46,7 @@ export const clientHandlers = [
   }),
   rest.post(`${environment.baseApiUrl}/clients`, async (req, res, ctx) => {
     const newClientData = await req.json();
-    clients.push(newClientData);
+    clients.push({ ...newClientData, id: clients.length + 1 });
     return await res(ctx.status(200), ctx.json(newClientData));
   }),
   rest.delete(`${environment.baseApiUrl}/clients/:id`, async (req, res, ctx) => {
