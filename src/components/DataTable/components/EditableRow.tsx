@@ -8,7 +8,7 @@ import { FaEye, FaTrash } from 'react-icons/fa6';
 import ReactDatePicker from 'react-datepicker';
 
 interface Props<T = unknown> {
-  onSubmit: (values: T) => void;
+  onSubmit: (values: T, onSuccess: () => void) => void;
   onCancel?: () => void;
   onDelete?: () => void;
   onRowPreview?: (values: T) => void;
@@ -32,7 +32,9 @@ export const EditableRow = <T,>({
     <Formik
       initialValues={initialValues as object}
       onSubmit={(values) => {
-        onSubmit(values as T);
+        onSubmit(values as T, () => {
+          setIsEditing(false);
+        });
       }}>
       {(formik) => (
         <div className={'table-row'}>

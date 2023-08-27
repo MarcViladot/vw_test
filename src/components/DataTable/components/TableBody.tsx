@@ -17,13 +17,13 @@ export const TableBody = <T,>({ newRow, cancelNewRow }: Props<T>) => {
 
   return (
     <>
-      {newRow && onRowAdded && (
+      {newRow && (
         <NewRow
           columnDefs={columnDefs}
           onCancel={cancelNewRow}
           newRow={newRow}
           onRowAdded={(values) => {
-            onRowAdded(values);
+            onRowAdded?.(values, cancelNewRow);
           }}
         />
       )}

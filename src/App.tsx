@@ -23,11 +23,17 @@ function App() {
         cellRenderer: (date: Date) => date.toLocaleString(),
       },
     ],
-    onRowEdit: (values) => {
+    onRowEdit: (values, onSuccess) => {
       console.log(values);
+      setTimeout(() => {
+        onSuccess();
+      }, 2000);
     },
-    onRowAdded: (values) => {
+    onRowAdded: (values, onSuccess) => {
       console.log(values);
+      setTimeout(() => {
+        onSuccess();
+      }, 2000);
     },
     onRowDelete: (values) => {
       console.log(values);
