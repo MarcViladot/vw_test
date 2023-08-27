@@ -8,7 +8,7 @@ import { FaEye, FaTrash } from 'react-icons/fa6';
 import { getRowValues } from '@/components/DataTable/utils/row';
 
 interface Props<T> {
-  newRow: T;
+  newRow: T | undefined;
   cancelNewRow: () => void;
 }
 

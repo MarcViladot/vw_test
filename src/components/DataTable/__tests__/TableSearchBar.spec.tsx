@@ -15,9 +15,6 @@ describe('TableSearchBar Test', () => {
         toggleSort: vi.fn(),
         handleSearchText: handleSearch,
         searchText: '',
-        cancelNewRow: vi.fn(),
-        newRow: undefined,
-        addNewRow: vi.fn(),
       }}>
       <TableSearchBar />
     </DataTableContext.Provider>

@@ -30,11 +30,8 @@ describe('TableBody Test', () => {
         toggleSort: vi.fn(),
         handleSearchText: vi.fn(),
         searchText: '',
-        cancelNewRow: vi.fn(),
-        newRow: undefined,
-        addNewRow: vi.fn(),
       }}>
-      <TableBody />
+      <TableBody newRow={undefined} cancelNewRow={vi.fn()} />
     </DataTableContext.Provider>
   );
 
