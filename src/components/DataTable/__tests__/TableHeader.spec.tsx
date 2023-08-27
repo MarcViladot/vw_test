@@ -27,9 +27,6 @@ describe('TableHeader Test', () => {
         toggleSort,
         handleSearchText: vi.fn(),
         searchText: '',
-        cancelNewRow: vi.fn(),
-        newRow: undefined,
-        addNewRow: vi.fn(),
       }}>
       <TableHeader />
     </DataTableContext.Provider>
