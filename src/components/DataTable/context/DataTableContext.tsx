@@ -12,9 +12,6 @@ interface ContextValue<T> extends Omit<TableOptions<T>, 'newRowModel'> {
   toggleSort: (field: keyof T) => void;
   searchText: string;
   handleSearchText: (text: string) => void;
-  newRow: Partial<T> | undefined;
-  addNewRow: () => void;
-  cancelNewRow: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,20 +22,15 @@ export const DataTableContext = createContext<ContextValue<any>>({
   toggleSort: () => null,
   searchText: '',
   handleSearchText: () => null,
-  addNewRow: () => null,
-  newRow: undefined,
-  cancelNewRow: () => null,
 });
 
 interface ProviderProps<T> extends TableOptions<T> {
   children: ReactElement;
 }
 
-export const DataTableProvider = <T,>({ children, data, newRowModel, ...rest }: ProviderProps<T>) => {
+export const DataTableProvider = <T,>({ children, data, ...rest }: ProviderProps<T>) => {
   const [sorting, setSorting] = useState<SortingState<T> | null>(null);
   const [searchText, setSearchText] = useState('');
-
-  const [newRow, setNewRow] = useState<Partial<T>>();
 
   const toggleSort = useCallback((field: keyof T) => {
     setSorting(getNewSortingState(field));
@@ -47,23 +39,12 @@ export const DataTableProvider = <T,>({ children, data, newRowModel, ...rest }: 
   const sortedData = useMemo(() => getSortedData(data, sorting), [data, sorting]);
   const filteredData = useMemo(() => getFilterData(sortedData, searchText), [searchText, sortedData]);
 
-  const addNewRow = useCallback(() => {
-    setNewRow(newRowModel);
-  }, [newRowModel]);
-
-  const cancelNewRow = useCallback(() => {
-    setNewRow(undefined);
-  }, []);
-
   const contextValue: ContextValue<T> = {
     data: filteredData,
     toggleSort,
     sorting,
     handleSearchText: setSearchText,
     searchText,
-    addNewRow,
-    newRow,
-    cancelNewRow,
     ...rest,
   };
 
