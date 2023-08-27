@@ -7,8 +7,13 @@ import { NewRow } from '@/components/DataTable/components/NewRow';
 import { FaEye, FaTrash } from 'react-icons/fa6';
 import { getRowValues } from '@/components/DataTable/utils/row';
 
-export const TableBody = <T,>() => {
-  const { data, columnDefs, newRow, onRowAdded, cancelNewRow } = useDataTableContext();
+interface Props<T> {
+  newRow: T;
+  cancelNewRow: () => void;
+}
+
+export const TableBody = <T,>({ newRow, cancelNewRow }: Props<T>) => {
+  const { data, columnDefs, onRowAdded } = useDataTableContext();
 
   return (
     <>
@@ -19,7 +24,6 @@ export const TableBody = <T,>() => {
           newRow={newRow}
           onRowAdded={(values) => {
             onRowAdded(values);
-            cancelNewRow();
           }}
         />
       )}

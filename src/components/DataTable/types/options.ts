@@ -7,5 +7,4 @@ export interface TableOptions<T = unknown> {
   onRowAdded?: (values: Partial<T>) => void;
   onRowDelete?: ({ row, data }: { row: number; data: T }) => void;
   onRowPreview?: (values: T) => void;
-  newRowModel?: Partial<T>;
 }
