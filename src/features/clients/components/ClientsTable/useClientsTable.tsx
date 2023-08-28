@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { TableOptions } from '@/components/DataTable';
+import { EditOptionsType, TableOptions } from '@/components/DataTable';
 import { Client } from '../../types';
 import { updateClient, createClient, deleteClient } from '../../api';
 import { calculateAge } from '@/features/clients/utils/date';
@@ -47,20 +47,26 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
         headerName: 'Active',
         field: 'active',
         type: 'text',
+        editOptions: {
+          type: EditOptionsType.Select,
+          options: [
+            { value: 'true', label: 'Yes' },
+            { value: 'false', label: 'No' },
+          ],
+          parseValue: (value) => value === 'true',
+        },
         cellRenderer: (value: boolean) => <div>{value ? 'Yes' : 'No'}</div>,
       },
     ],
-    onRowEdit: (data: Client, onSuccess) => {
-      updateClientMutation.mutateAsync({ id: data.id, data }).then(onSuccess);
+    onRowEdit: (data: Client, hideEdition) => {
+      updateClientMutation.mutateAsync({ id: data.id, data }).then(hideEdition);
     },
     onRowDelete: ({ data }) => {
       deleteClientMutation.mutate(data.id);
     },
-    onRowAdded: (data, onSuccess) => {
-      console.log(data);
+    onRowAdded: (data, hideEdition) => {
       createClientMutation.mutateAsync(data).then(() => {
-        console.log('hola');
-        onSuccess();
+        hideEdition();
       });
     },
     onRowPreview: onClientSelected,

@@ -1,14 +1,16 @@
 import React, { FC, useState } from 'react';
 import { Formik } from 'formik';
-import { TableBodyCell, TableBodyCellRenderer } from '@/components/DataTable/components/TableBodyCell';
+import { TableBodyCell } from './TableBodyCell';
+import { TableBodyCellRenderer } from './TableBodyCellRenderer';
 import { MdOutlineEdit } from 'react-icons/md';
 import { GiCancel, GiConfirmed } from 'react-icons/gi';
-import { ColType, RowValues } from '../types';
+import { ColType, ColumnDefs, RowValues } from '../types';
 import { FaEye, FaTrash } from 'react-icons/fa6';
 import ReactDatePicker from 'react-datepicker';
+import { CustomInput } from '@/components/DataTable/components/CustomInput';
 
 interface Props<T = unknown> {
-  onSubmit: (values: T, onSuccess: () => void) => void;
+  onSubmit: (values: T, hideEdition: () => void) => void;
   onCancel?: () => void;
   onDelete?: () => void;
   onRowPreview?: (values: T) => void;
@@ -39,13 +41,14 @@ export const EditableRow = <T,>({
       }}>
       {(formik) => (
         <div className={'table-row'}>
-          {rowValues.map(({ field, value, type, cellRenderer }, i) =>
+          {rowValues.map(({ field, value, type, cellRenderer, editOptions }, i) =>
             isEditing ? (
               <TableBodyCell key={i}>
                 <EditableInput
                   colType={type}
                   // @ts-expect-error
                   value={formik.values[field]}
+                  editOptions={editOptions}
                   onChange={(value) => {
                     formik.setFieldValue(field as string, value);
                   }}
@@ -109,9 +112,14 @@ interface EditableInputProps {
   value: unknown;
   onChange: (value: unknown) => void;
   colType: ColType;
+  editOptions: ColumnDefs['editOptions'];
 }
 
-const EditableInput: FC<EditableInputProps> = ({ colType, value, onChange }) => {
+const EditableInput: FC<EditableInputProps> = ({ colType, value, onChange, editOptions }) => {
+  if (editOptions) {
+    return <CustomInput editOptions={editOptions} onChange={onChange} value={value} />;
+  }
+
   switch (colType) {
     case 'text':
     case 'number':
