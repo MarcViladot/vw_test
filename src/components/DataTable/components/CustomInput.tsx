@@ -1,5 +1,5 @@
-import { EditOptions, EditOptionsType } from '@/components/DataTable';
 import React, { FC } from 'react';
+import { EditOptions, EditOptionsType } from '../types';
 
 interface Props {
   value: unknown;

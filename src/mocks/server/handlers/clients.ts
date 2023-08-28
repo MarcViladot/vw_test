@@ -6,7 +6,7 @@ import { faker } from '@faker-js/faker';
 function generateUser(id: number): Client {
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
-  const born = faker.date.between(99).toISOString();
+  const born = faker.date.past({ years: 99 }).toISOString();
   const partners = Math.floor(Math.random() * 1000) + 1;
   const image = `https://i.pravatar.cc/150?img=${id}`;
   const active = Math.random() < 0.5; // 50% chance of being active
