@@ -8,8 +8,8 @@ export class StringSortingStrategy<T> implements SortingStrategy<T> {
   constructor(private readonly sorting: SortingState<T>) {}
 
   compare = (a: T, b: T): number => {
-    const aValue = a[this.sorting.field] as unknown as string;
-    const bValue = b[this.sorting.field] as unknown as string;
+    const aValue = String(a[this.sorting.field]);
+    const bValue = String(b[this.sorting.field]);
     return this.sorting.direction === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
   };
 }
