@@ -30,6 +30,7 @@ export const EditableRow = <T,>({
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues as object}
       onSubmit={(values) => {
         onSubmit(values as T, () => {
