@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ColumnDefs } from '@/components/DataTable/types';
+import { ColumnDefs } from '../types';
 import { useDataTableContext } from '../context/DataTableContext';
 import { FaArrowDownLong, FaArrowUpLong } from 'react-icons/fa6';
 

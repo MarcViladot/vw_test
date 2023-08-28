@@ -34,6 +34,12 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
   const tableOptions: TableOptions<Client> = {
     data: clients ?? [],
     columnDefs: [
+      {
+        headerName: 'Image',
+        field: 'image',
+        type: 'text',
+        cellRenderer: (value: string) => <img src={value} alt={'user-img'} className={'w-10 h-10'} />,
+      },
       { headerName: 'Name', field: 'name', type: 'text' },
       { headerName: 'Last Name', field: 'lastName', type: 'text' },
       {

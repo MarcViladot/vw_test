@@ -7,7 +7,7 @@ import { GiCancel, GiConfirmed } from 'react-icons/gi';
 import { ColType, ColumnDefs, RowValues } from '../types';
 import { FaEye, FaTrash } from 'react-icons/fa6';
 import ReactDatePicker from 'react-datepicker';
-import { CustomInput } from '@/components/DataTable/components/CustomInput';
+import { CustomInput } from './CustomInput';
 
 interface Props<T = unknown> {
   onSubmit: (values: T, hideEdition: () => void) => void;
