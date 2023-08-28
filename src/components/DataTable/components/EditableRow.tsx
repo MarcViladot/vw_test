@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Formik } from 'formik';
-import { TableBodyCell, TableBodyCellRenderer } from '@/components/DataTable/components/TableBodyCell';
+import { TableBodyCell, TableBodyCellRenderer } from './TableBodyCell';
 import { MdOutlineEdit } from 'react-icons/md';
 import { GiCancel, GiConfirmed } from 'react-icons/gi';
 import { ColType, RowValues } from '../types';
@@ -8,7 +8,7 @@ import { FaEye, FaTrash } from 'react-icons/fa6';
 import ReactDatePicker from 'react-datepicker';
 
 interface Props<T = unknown> {
-  onSubmit: (values: T, onSuccess: () => void) => void;
+  onSubmit: (values: T, hideEdition: () => void) => void;
   onCancel?: () => void;
   onDelete?: () => void;
   onRowPreview?: (values: T) => void;

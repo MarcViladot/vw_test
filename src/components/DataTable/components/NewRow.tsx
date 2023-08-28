@@ -1,7 +1,7 @@
 import { ColumnDefs, RowValues } from '../types';
 import React, { useMemo } from 'react';
 import { EditableRow } from './EditableRow';
-import { getRowValues } from '@/components/DataTable/utils/row';
+import { getRowValues } from '../utils/row';
 
 interface Props<T> {
   newRow: T;

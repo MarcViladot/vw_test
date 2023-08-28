@@ -3,9 +3,9 @@ import { useDataTableContext } from '../context/DataTableContext';
 import { ColumnDefs, RowValues } from '../types';
 import { TableBodyCell, TableBodyCellRenderer } from './TableBodyCell';
 import { EditableRow } from './EditableRow';
-import { NewRow } from '@/components/DataTable/components/NewRow';
+import { NewRow } from './NewRow';
 import { FaEye, FaTrash } from 'react-icons/fa6';
-import { getRowValues } from '@/components/DataTable/utils/row';
+import { getRowValues } from '../utils/row';
 
 interface Props<T> {
   newRow: T | undefined;
@@ -30,7 +30,7 @@ export const TableBody = <T,>({ newRow, cancelNewRow }: Props<T>) => {
       {data.length ? (
         data.map((row, i) => <TableRow<T> rowIndex={i} key={i} data={row} columnDefs={columnDefs} />)
       ) : (
-        <h3>No data</h3>
+        <h3 className={'block m-auto text-center my-10'}>No data</h3>
       )}
     </>
   );

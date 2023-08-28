@@ -50,17 +50,15 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
         cellRenderer: (value: boolean) => <div>{value ? 'Yes' : 'No'}</div>,
       },
     ],
-    onRowEdit: (data: Client, onSuccess) => {
-      updateClientMutation.mutateAsync({ id: data.id, data }).then(onSuccess);
+    onRowEdit: (data: Client, hideEdition) => {
+      updateClientMutation.mutateAsync({ id: data.id, data }).then(hideEdition);
     },
     onRowDelete: ({ data }) => {
       deleteClientMutation.mutate(data.id);
     },
-    onRowAdded: (data, onSuccess) => {
-      console.log(data);
+    onRowAdded: (data, hideEdition) => {
       createClientMutation.mutateAsync(data).then(() => {
-        console.log('hola');
-        onSuccess();
+        hideEdition();
       });
     },
     onRowPreview: onClientSelected,

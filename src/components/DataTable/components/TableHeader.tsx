@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { ColumnDefs } from '@/components/DataTable/types';
-import { useDataTableContext } from '@/components/DataTable/context/DataTableContext';
+import { useDataTableContext } from '../context/DataTableContext';
 import { FaArrowDownLong, FaArrowUpLong } from 'react-icons/fa6';
 
 export const TableHeader = <T,>() => {

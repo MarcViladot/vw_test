@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDataTableContext } from '@/components/DataTable/context/DataTableContext';
+import { useDataTableContext } from '../context/DataTableContext';
 
 export const TableSearchBar = () => {
   const { searchText, handleSearchText } = useDataTableContext();
