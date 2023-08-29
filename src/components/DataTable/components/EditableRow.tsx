@@ -40,7 +40,7 @@ export const EditableRow = <T,>({
         });
       }}>
       {(formik) => (
-        <div className={'table-row'}>
+        <tr>
           {rowValues.map(({ field, value, type, cellRenderer, editOptions }, i) =>
             isEditing ? (
               <TableBodyCell key={i}>
@@ -102,7 +102,7 @@ export const EditableRow = <T,>({
               )}
             </div>
           </TableBodyCell>
-        </div>
+        </tr>
       )}
     </Formik>
   );

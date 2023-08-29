@@ -17,7 +17,7 @@ export const TableBody = <T,>({ newRow, cancelNewRow }: Props<T>) => {
   const { data, columnDefs, onRowAdded } = useDataTableContext();
 
   return (
-    <>
+    <tbody>
       {newRow && (
         <NewRow
           columnDefs={columnDefs}
@@ -31,9 +31,11 @@ export const TableBody = <T,>({ newRow, cancelNewRow }: Props<T>) => {
       {data.length ? (
         data.map((row, i) => <TableRow<T> rowIndex={i} key={i} data={row} columnDefs={columnDefs} />)
       ) : (
-        <h3 className={'text-center my-10'}>No data</h3>
+        <td colSpan={columnDefs.length + 1}>
+          <h3 className={'text-center my-10'}>No data</h3>
+        </td>
       )}
-    </>
+    </tbody>
   );
 };
 
@@ -65,7 +67,7 @@ const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
   }
 
   return (
-    <div className={'table-row'}>
+    <tr>
       {rowValues.map(({ field, value, cellRenderer }, i) => (
         <TableBodyCellRenderer key={i} value={value} cellRenderer={cellRenderer} />
       ))}
@@ -83,6 +85,6 @@ const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
           )}
         </div>
       </TableBodyCell>
-    </div>
+    </tr>
   );
 };
