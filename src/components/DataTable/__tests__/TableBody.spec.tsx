@@ -44,7 +44,7 @@ describe('TableBody Test', () => {
   });
   it('should show all data rows', () => {
     const { container } = render(<WithProvider data={mockedData} />);
-    const cells = container.getElementsByClassName('table-row');
+    const cells = container.getElementsByTagName('tr');
     expect(cells.length).toBe(mockedData.length);
   });
 });
