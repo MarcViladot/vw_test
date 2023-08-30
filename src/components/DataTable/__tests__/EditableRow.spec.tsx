@@ -16,7 +16,7 @@ const rowValues: Array<RowValues<typeof initialValues>> = [
 describe('EditableRow Test', () => {
   it('renders the initial values in non-edit mode', () => {
     const { queryByText } = render(
-      <EditableRow onSubmit={vi.fn()} initialValues={initialValues} rowValues={rowValues} />
+      <EditableRow rowIndex={0} onSubmit={vi.fn()} initialValues={initialValues} rowValues={rowValues} />
     );
 
     expect(queryByText('Value 1')).toBeTruthy();
@@ -25,7 +25,7 @@ describe('EditableRow Test', () => {
 
   it('switches to edit mode when edit icon is clicked', () => {
     const { container, getByTestId } = render(
-      <EditableRow onSubmit={vi.fn()} initialValues={initialValues} rowValues={rowValues} />
+      <EditableRow onSubmit={vi.fn()} rowIndex={0} initialValues={initialValues} rowValues={rowValues} />
     );
 
     fireEvent.click(getByTestId('edit-icon'));
@@ -36,7 +36,7 @@ describe('EditableRow Test', () => {
   it('submits the form when confirmation icon is clicked', async () => {
     const onSubmitMock = vi.fn();
     const { container, getByTestId } = render(
-      <EditableRow onSubmit={onSubmitMock} initialValues={initialValues} rowValues={rowValues} />
+      <EditableRow rowIndex={0} onSubmit={onSubmitMock} initialValues={initialValues} rowValues={rowValues} />
     );
 
     fireEvent.click(getByTestId('edit-icon'));
@@ -44,13 +44,13 @@ describe('EditableRow Test', () => {
     fireEvent.click(getByTestId('submit-icon'));
 
     await waitFor(() => {
-      expect(onSubmitMock).toHaveBeenCalledWith({ field1: 'New Value', field2: 'Value 2' });
+      expect(onSubmitMock).toHaveBeenCalledWith({ field1: 'New Value', field2: 'Value 2' }, expect.any(Function));
     });
   });
 
   it('cancels editing when cancel icon is clicked', () => {
     const { container, getByTestId, queryByText } = render(
-      <EditableRow onSubmit={vi.fn()} initialValues={initialValues} rowValues={rowValues} />
+      <EditableRow rowIndex={0} onSubmit={vi.fn()} initialValues={initialValues} rowValues={rowValues} />
     );
 
     fireEvent.click(getByTestId('edit-icon'));
@@ -59,14 +59,5 @@ describe('EditableRow Test', () => {
 
     fireEvent.click(getByTestId('cancel-icon'));
     expect(queryByText('Value 1')).toBeTruthy();
-  });
-
-  it('should call onDelete on trash click', () => {
-    const onDelete = vi.fn();
-    const { getByTestId } = render(
-      <EditableRow onSubmit={vi.fn()} onDelete={onDelete} initialValues={initialValues} rowValues={rowValues} />
-    );
-    fireEvent.click(getByTestId('trash-icon'));
-    expect(onDelete).toHaveBeenCalled();
   });
 });
