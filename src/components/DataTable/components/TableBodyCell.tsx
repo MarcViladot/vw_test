@@ -1,11 +1,5 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 
-interface Props {
-  children: ReactNode;
-}
-
-export const TableBodyCell: FC<Props> = ({ children }) => {
-  return <div className={'table-cell border-b py-3.5 px-2'}>{children}</div>;
+export const TableBodyCell: FC<PropsWithChildren> = ({ children }) => {
+  return <td className={`border-b py-3.5 px-2 align-middle`}>{children}</td>;
 };
-
-

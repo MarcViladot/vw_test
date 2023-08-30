@@ -6,16 +6,16 @@ import { FaArrowDownLong, FaArrowUpLong } from 'react-icons/fa6';
 export const TableHeader = <T,>() => {
   const { columnDefs } = useDataTableContext();
   return (
-    <>
-      <div className={'table-row'}>
+    <thead>
+      <tr>
         {columnDefs.map((def: ColumnDefs<T>, i) => (
           <HeaderCell<T> {...def} key={i} />
         ))}
-        <div className={'table-cell cursor-pointer p-1 px-2 bg-[#F1F3FA]'}>
+        <th className={'cursor-pointer p-1 px-2 bg-[#F1F3FA]'}>
           <div className={'flex justify-between items-center text-sm font-bold text-[#ACB1C5]'}>Actions</div>
-        </div>
-      </div>
-    </>
+        </th>
+      </tr>
+    </thead>
   );
 };
 
@@ -25,8 +25,8 @@ const HeaderCell = <T,>({ headerName, field }: ColumnDefs<T>) => {
   const sortDirection = useMemo(() => (sorting?.field === field ? sorting.direction : ''), [sorting, field]);
 
   return (
-    <div
-      className={'table-cell cursor-pointer p-1 px-2 bg-[#F1F3FA]'}
+    <th
+      className={'cursor-pointer p-1 px-2 bg-[#F1F3FA]'}
       data-testid={field}
       onClick={() => {
         toggleSort(field);
@@ -43,6 +43,6 @@ const HeaderCell = <T,>({ headerName, field }: ColumnDefs<T>) => {
           </div>
         )}
       </div>
-    </div>
+    </th>
   );
 };

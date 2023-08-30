@@ -13,9 +13,9 @@ export const DataTable = <T,>({ options, addRow }: DataTableProps<T>) => {
 
   return (
     <DataTableProvider {...options}>
-      <div className={'flex flex-col flex-grow gap-4'}>
+      <div className={'w-full h-full overflow-y-auto'}>
         <TableUtilities addRow={addRow?.({ setNewRow })} />
-        <div className={'table table-fixed w-full'}>
+        <table className={'w-full table-fixed'}>
           <TableHeader />
           <TableBody
             newRow={newRow}
@@ -23,7 +23,7 @@ export const DataTable = <T,>({ options, addRow }: DataTableProps<T>) => {
               setNewRow(undefined);
             }}
           />
-        </div>
+        </table>
       </div>
     </DataTableProvider>
   );

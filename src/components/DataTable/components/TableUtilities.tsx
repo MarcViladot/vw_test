@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const TableUtilities: FC<Props> = ({ addRow }) => (
-  <div className={'flex justify-between items-center'}>
+  <div className={'flex justify-between items-center mb-4'}>
     <TableSearchBar />
     {addRow}
   </div>

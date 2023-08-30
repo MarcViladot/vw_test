@@ -5,117 +5,94 @@ import { TableBodyCellRenderer } from './TableBodyCellRenderer';
 import { MdOutlineEdit } from 'react-icons/md';
 import { GiCancel, GiConfirmed } from 'react-icons/gi';
 import { ColType, ColumnDefs, RowValues } from '../types';
-import { FaEye, FaTrash } from 'react-icons/fa6';
 import ReactDatePicker from 'react-datepicker';
 import { CustomInput } from './CustomInput';
+import { ActionsCell } from '@/components/DataTable/components/ActionsCell';
 
 interface Props<T = unknown> {
   onSubmit: (values: T, hideEdition: () => void) => void;
-  onCancel?: () => void;
-  onDelete?: () => void;
-  onRowPreview?: (values: T) => void;
+  rowIndex: number;
   initialValues: T;
   rowValues: Array<RowValues<T>>;
   editing?: boolean;
+  onCancel?: () => void;
 }
 
-export const EditableRow = <T,>({
-  onSubmit,
-  rowValues,
-  initialValues,
-  editing,
-  onCancel,
-  onDelete,
-  onRowPreview,
-}: Props<T>) => {
+export const EditableRow = <T,>({ onSubmit, rowIndex, rowValues, initialValues, editing, onCancel }: Props<T>) => {
   const [isEditing, setIsEditing] = useState(editing ?? false);
 
   return (
-    <Formik
+    // @ts-expect-error
+    <Formik<T>
       enableReinitialize
-      initialValues={initialValues as object}
+      initialValues={initialValues}
       onSubmit={(values) => {
-        onSubmit(values as T, () => {
+        onSubmit(values, () => {
           setIsEditing(false);
         });
       }}>
       {(formik) => (
-        <div className={'table-row'}>
-          {rowValues.map(({ field, value, type, cellRenderer, editOptions }, i) =>
+        <tr>
+          {rowValues.map(({ field, type, editOptions, ...rest }, i) =>
             isEditing ? (
               <TableBodyCell key={i}>
-                <EditableInput
+                <CellInput
                   colType={type}
-                  // @ts-expect-error
                   value={formik.values[field]}
                   editOptions={editOptions}
                   onChange={(value) => {
-                    formik.setFieldValue(field as string, value);
+                    formik.setFieldValue(String(field), value);
                   }}
                 />
               </TableBodyCell>
             ) : (
-              <TableBodyCellRenderer value={value} key={i} cellRenderer={cellRenderer} />
+              <TableBodyCellRenderer key={i} {...rest} />
             )
           )}
-          <TableBodyCell>
-            <div className={'flex gap-3 items-center'}>
-              {!isEditing ? (
-                <>
-                  <MdOutlineEdit
-                    data-testid={'edit-icon'}
-                    className={'cursor-pointer'}
-                    onClick={() => {
-                      setIsEditing(true);
-                    }}
-                  />
-                  {onDelete && <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={onDelete} />}
-                  {onRowPreview && (
-                    <FaEye
-                      data-testid={'trash-icon'}
-                      className={'cursor-pointer'}
-                      onClick={() => {
-                        onRowPreview(initialValues);
-                      }}
-                    />
-                  )}
-                </>
-              ) : (
-                <>
-                  <GiConfirmed
-                    data-testid={'submit-icon'}
-                    className={'cursor-pointer'}
-                    onClick={() => {
-                      formik.submitForm();
-                    }}
-                  />
-                  <GiCancel
-                    data-testid={'cancel-icon'}
-                    className={'cursor-pointer'}
-                    onClick={() => {
-                      setIsEditing(false);
-                      formik.resetForm();
-                      onCancel?.();
-                    }}
-                  />
-                </>
-              )}
-            </div>
-          </TableBodyCell>
-        </div>
+          <ActionsCell hideContent={isEditing} data={initialValues} rowIndex={rowIndex}>
+            {!isEditing ? (
+              <MdOutlineEdit
+                data-testid={'edit-icon'}
+                className={'cursor-pointer'}
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+              />
+            ) : (
+              <>
+                <GiConfirmed
+                  data-testid={'submit-icon'}
+                  className={'cursor-pointer'}
+                  onClick={() => {
+                    formik.submitForm();
+                  }}
+                />
+                <GiCancel
+                  data-testid={'cancel-icon'}
+                  className={'cursor-pointer'}
+                  onClick={() => {
+                    setIsEditing(false);
+                    formik.resetForm();
+                    onCancel?.();
+                  }}
+                />
+              </>
+            )}
+          </ActionsCell>
+        </tr>
       )}
     </Formik>
   );
 };
 
-interface EditableInputProps {
+interface CellInputProps {
   value: unknown;
   onChange: (value: unknown) => void;
   colType: ColType;
   editOptions: ColumnDefs['editOptions'];
 }
 
-const EditableInput: FC<EditableInputProps> = ({ colType, value, onChange, editOptions }) => {
+const CellInput: FC<CellInputProps> = ({ colType, value, onChange, editOptions }) => {
   if (editOptions) {
     return <CustomInput editOptions={editOptions} onChange={onChange} value={value} />;
   }

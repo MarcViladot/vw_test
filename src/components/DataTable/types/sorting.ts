@@ -18,8 +18,8 @@ export class NumberSortingStrategy<T> implements SortingStrategy<T> {
   constructor(private readonly sorting: SortingState<T>) {}
 
   compare = (a: T, b: T): number => {
-    const aValue = a[this.sorting.field] as unknown as number;
-    const bValue = b[this.sorting.field] as unknown as number;
+    const aValue = Number(a[this.sorting.field]);
+    const bValue = Number(b[this.sorting.field]);
     return this.sorting.direction === 'asc' ? aValue - bValue : bValue - aValue;
   };
 }

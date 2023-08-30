@@ -38,7 +38,7 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
         headerName: 'Image',
         field: 'image',
         type: 'text',
-        cellRenderer: (value: string) => <img src={value} alt={'user-img'} className={'w-10 h-10'} />,
+        cellRenderer: (value: string) => <img src={value} alt={'user-img'} className={'w-10 h-10 rounded-full'} />,
       },
       { headerName: 'Name', field: 'name', type: 'text' },
       { headerName: 'Last Name', field: 'lastName', type: 'text' },
@@ -46,7 +46,7 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
         headerName: 'Age',
         field: 'born',
         type: 'date',
-        cellRenderer: (value: Date) => <div>{calculateAge(value)}</div>,
+        cellRenderer: (value: Date) => <span>{calculateAge(value)}</span>,
       },
       { headerName: 'Partners', field: 'partners', type: 'number' },
       {
@@ -61,7 +61,14 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
           ],
           parseValue: (value) => value === 'true',
         },
-        cellRenderer: (value: boolean) => <div>{value ? 'Yes' : 'No'}</div>,
+        cellRenderer: (value: boolean) => (
+          <span
+            className={`p-2 flex w-14 justify-center ${
+              value ? 'bg-green-200' : 'bg-red-200'
+            } rounded-lg text-gray-600`}>
+            {value ? 'Yes' : 'No'}
+          </span>
+        ),
       },
     ],
     onRowEdit: (data: Client, hideEdition) => {
