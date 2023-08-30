@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { DataTableContext } from '@/components/DataTable/context/DataTableContext';
+import { DataTableContext } from '../context/DataTableContext';
 import { fireEvent, render } from '@testing-library/react';
-import { ActionsCell } from '@/components/DataTable/components/ActionsCell';
+import { ActionsCell } from '../components/ActionsCell';
 
 describe('ActionsCell Test', () => {
   const onRowDelete = vi.fn();

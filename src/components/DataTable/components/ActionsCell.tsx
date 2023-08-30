@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { FaEye, FaTrash } from 'react-icons/fa6';
-import { TableBodyCell } from '@/components/DataTable/components/TableBodyCell';
-import { useDataTableContext } from '@/components/DataTable/context/DataTableContext';
+import { TableBodyCell } from './TableBodyCell';
+import { useDataTableContext } from '../context/DataTableContext';
 
 interface Props<T> {
   data: T;
