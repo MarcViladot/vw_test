@@ -18,22 +18,26 @@ export const ActionsCell = <T,>({ data, rowIndex, children, hideContent = false 
   };
 
   return (
-    <TableBodyCell className={'flex gap-3 items-center'}>
-      {children}
-      {!hideContent && (
-        <>
-          {onRowDelete && <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={handleRowDelete} />}
-          {onRowPreview && (
-            <FaEye
-              data-testid={'eye-icon'}
-              className={'cursor-pointer'}
-              onClick={() => {
-                onRowPreview(data);
-              }}
-            />
-          )}
-        </>
-      )}
+    <TableBodyCell>
+      <span className={'flex gap-3 items-center'}>
+        {children}
+        {!hideContent && (
+          <>
+            {onRowDelete && (
+              <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={handleRowDelete} />
+            )}
+            {onRowPreview && (
+              <FaEye
+                data-testid={'eye-icon'}
+                className={'cursor-pointer'}
+                onClick={() => {
+                  onRowPreview(data);
+                }}
+              />
+            )}
+          </>
+        )}
+      </span>
     </TableBodyCell>
   );
 };
