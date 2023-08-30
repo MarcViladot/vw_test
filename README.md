@@ -53,7 +53,7 @@ future admitting new options such as sortable (if you want to disable the sortin
 In the table options there is a set of callbacks for the table operations of delete/edit/add/preview, the icons to perform the operations will only show up in the Actions columns if the callback is defined.
 
 The sort function sorts by the typeof of the data, here I used a StrategyPattern to allow more types of data to be sorted in the future, avoiding an if/else infinite block. 
-You can sort columns with cellRenderer, but it will sort by the column value and not the rendered value.
+You can sort columns with cellRenderer, but it will sort by the column value and not the rendered value, same with the search function.
 
 
 

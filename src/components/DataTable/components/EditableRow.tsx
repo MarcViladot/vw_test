@@ -22,31 +22,31 @@ export const EditableRow = <T,>({ onSubmit, rowIndex, rowValues, initialValues, 
   const [isEditing, setIsEditing] = useState(editing ?? false);
 
   return (
-    <Formik
+    // @ts-expect-error
+    <Formik<T>
       enableReinitialize
-      initialValues={initialValues as object}
+      initialValues={initialValues}
       onSubmit={(values) => {
-        onSubmit(values as T, () => {
+        onSubmit(values, () => {
           setIsEditing(false);
         });
       }}>
       {(formik) => (
         <tr>
-          {rowValues.map(({ field, value, type, cellRenderer, editOptions }, i) =>
+          {rowValues.map(({ field, type, editOptions, ...rest }, i) =>
             isEditing ? (
               <TableBodyCell key={i}>
-                <EditableInput
+                <CellInput
                   colType={type}
-                  // @ts-expect-error
                   value={formik.values[field]}
                   editOptions={editOptions}
                   onChange={(value) => {
-                    formik.setFieldValue(field as string, value);
+                    formik.setFieldValue(String(field), value);
                   }}
                 />
               </TableBodyCell>
             ) : (
-              <TableBodyCellRenderer value={value} key={i} cellRenderer={cellRenderer} />
+              <TableBodyCellRenderer key={i} {...rest} />
             )
           )}
           <ActionsCell hideContent={isEditing} data={initialValues} rowIndex={rowIndex}>
@@ -85,14 +85,14 @@ export const EditableRow = <T,>({ onSubmit, rowIndex, rowValues, initialValues, 
   );
 };
 
-interface EditableInputProps {
+interface CellInputProps {
   value: unknown;
   onChange: (value: unknown) => void;
   colType: ColType;
   editOptions: ColumnDefs['editOptions'];
 }
 
-const EditableInput: FC<EditableInputProps> = ({ colType, value, onChange, editOptions }) => {
+const CellInput: FC<CellInputProps> = ({ colType, value, onChange, editOptions }) => {
   if (editOptions) {
     return <CustomInput editOptions={editOptions} onChange={onChange} value={value} />;
   }
