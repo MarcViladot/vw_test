@@ -5,29 +5,20 @@ import { TableBodyCellRenderer } from './TableBodyCellRenderer';
 import { MdOutlineEdit } from 'react-icons/md';
 import { GiCancel, GiConfirmed } from 'react-icons/gi';
 import { ColType, ColumnDefs, RowValues } from '../types';
-import { FaEye, FaTrash } from 'react-icons/fa6';
 import ReactDatePicker from 'react-datepicker';
 import { CustomInput } from './CustomInput';
+import { ActionsCell } from '@/components/DataTable/components/ActionsCell';
 
 interface Props<T = unknown> {
   onSubmit: (values: T, hideEdition: () => void) => void;
-  onCancel?: () => void;
-  onDelete?: () => void;
-  onRowPreview?: (values: T) => void;
+  rowIndex: number;
   initialValues: T;
   rowValues: Array<RowValues<T>>;
   editing?: boolean;
+  onCancel?: () => void;
 }
 
-export const EditableRow = <T,>({
-  onSubmit,
-  rowValues,
-  initialValues,
-  editing,
-  onCancel,
-  onDelete,
-  onRowPreview,
-}: Props<T>) => {
+export const EditableRow = <T,>({ onSubmit, rowIndex, rowValues, initialValues, editing, onCancel }: Props<T>) => {
   const [isEditing, setIsEditing] = useState(editing ?? false);
 
   return (
@@ -58,50 +49,36 @@ export const EditableRow = <T,>({
               <TableBodyCellRenderer value={value} key={i} cellRenderer={cellRenderer} />
             )
           )}
-          <TableBodyCell>
-            <div className={'flex gap-3 items-center'}>
-              {!isEditing ? (
-                <>
-                  <MdOutlineEdit
-                    data-testid={'edit-icon'}
-                    className={'cursor-pointer'}
-                    onClick={() => {
-                      setIsEditing(true);
-                    }}
-                  />
-                  {onDelete && <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={onDelete} />}
-                  {onRowPreview && (
-                    <FaEye
-                      data-testid={'trash-icon'}
-                      className={'cursor-pointer'}
-                      onClick={() => {
-                        onRowPreview(initialValues);
-                      }}
-                    />
-                  )}
-                </>
-              ) : (
-                <>
-                  <GiConfirmed
-                    data-testid={'submit-icon'}
-                    className={'cursor-pointer'}
-                    onClick={() => {
-                      formik.submitForm();
-                    }}
-                  />
-                  <GiCancel
-                    data-testid={'cancel-icon'}
-                    className={'cursor-pointer'}
-                    onClick={() => {
-                      setIsEditing(false);
-                      formik.resetForm();
-                      onCancel?.();
-                    }}
-                  />
-                </>
-              )}
-            </div>
-          </TableBodyCell>
+          <ActionsCell hideContent={isEditing} data={initialValues} rowIndex={rowIndex}>
+            {!isEditing ? (
+              <MdOutlineEdit
+                data-testid={'edit-icon'}
+                className={'cursor-pointer'}
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+              />
+            ) : (
+              <>
+                <GiConfirmed
+                  data-testid={'submit-icon'}
+                  className={'cursor-pointer'}
+                  onClick={() => {
+                    formik.submitForm();
+                  }}
+                />
+                <GiCancel
+                  data-testid={'cancel-icon'}
+                  className={'cursor-pointer'}
+                  onClick={() => {
+                    setIsEditing(false);
+                    formik.resetForm();
+                    onCancel?.();
+                  }}
+                />
+              </>
+            )}
+          </ActionsCell>
         </tr>
       )}
     </Formik>
