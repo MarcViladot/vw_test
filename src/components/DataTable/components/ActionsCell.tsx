@@ -4,18 +4,13 @@ import { TableBodyCell } from '@/components/DataTable/components/TableBodyCell';
 import { useDataTableContext } from '@/components/DataTable/context/DataTableContext';
 
 interface Props<T> {
-  rowIndex: number;
   data: T;
   hideContent?: boolean;
   children?: ReactNode;
 }
 
-export const ActionsCell = <T,>({ data, rowIndex, children, hideContent = false }: Props<T>) => {
+export const ActionsCell = <T,>({ data, children, hideContent = false }: Props<T>) => {
   const { onRowDelete, onRowPreview } = useDataTableContext();
-
-  const handleRowDelete = () => {
-    onRowDelete?.({ row: rowIndex, data });
-  };
 
   return (
     <TableBodyCell>
@@ -24,7 +19,13 @@ export const ActionsCell = <T,>({ data, rowIndex, children, hideContent = false 
         {!hideContent && (
           <>
             {onRowDelete && (
-              <FaTrash data-testid={'trash-icon'} className={'cursor-pointer'} onClick={handleRowDelete} />
+              <FaTrash
+                data-testid={'trash-icon'}
+                className={'cursor-pointer'}
+                onClick={() => {
+                  onRowDelete?.(data);
+                }}
+              />
             )}
             {onRowPreview && (
               <FaEye

@@ -6,8 +6,6 @@ interface Props {
   cellRenderer?: (value: unknown) => ReactNode;
 }
 
-export const TableBodyCellRenderer: FC<Props> = ({ value, cellRenderer }) => {
-  const cellValue = cellRenderer ? cellRenderer(value) : String(value);
-
-  return <TableBodyCell>{cellValue}</TableBodyCell>;
-};
+export const TableBodyCellRenderer: FC<Props> = ({ value, cellRenderer }) => (
+  <TableBodyCell>{cellRenderer ? cellRenderer(value) : String(value)}</TableBodyCell>
+);

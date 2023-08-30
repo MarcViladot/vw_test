@@ -13,14 +13,5 @@ interface Props<T> {
 export const NewRow = <T,>({ columnDefs, newRow, onRowAdded, ...rest }: Props<T>) => {
   const rowValues: Array<RowValues<T>> = useMemo(() => getRowValues(newRow, columnDefs), [newRow, columnDefs]);
 
-  return (
-    <EditableRow
-      rowIndex={-1}
-      onSubmit={onRowAdded}
-      initialValues={newRow}
-      rowValues={rowValues}
-      editing={true}
-      {...rest}
-    />
-  );
+  return <EditableRow onSubmit={onRowAdded} initialValues={newRow} rowValues={rowValues} editing={true} {...rest} />;
 };
