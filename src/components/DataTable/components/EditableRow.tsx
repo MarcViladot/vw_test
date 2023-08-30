@@ -11,14 +11,13 @@ import { ActionsCell } from '@/components/DataTable/components/ActionsCell';
 
 interface Props<T = unknown> {
   onSubmit: (values: T, hideEdition: () => void) => void;
-  rowIndex: number;
   initialValues: T;
   rowValues: Array<RowValues<T>>;
   editing?: boolean;
   onCancel?: () => void;
 }
 
-export const EditableRow = <T,>({ onSubmit, rowIndex, rowValues, initialValues, editing, onCancel }: Props<T>) => {
+export const EditableRow = <T,>({ onSubmit, rowValues, initialValues, editing, onCancel }: Props<T>) => {
   const [isEditing, setIsEditing] = useState(editing ?? false);
 
   return (
@@ -49,7 +48,7 @@ export const EditableRow = <T,>({ onSubmit, rowIndex, rowValues, initialValues, 
               <TableBodyCellRenderer key={i} {...rest} />
             )
           )}
-          <ActionsCell hideContent={isEditing} data={initialValues} rowIndex={rowIndex}>
+          <ActionsCell hideContent={isEditing} data={initialValues}>
             {!isEditing ? (
               <MdOutlineEdit
                 data-testid={'edit-icon'}

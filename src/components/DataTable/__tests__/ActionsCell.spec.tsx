@@ -20,7 +20,7 @@ describe('ActionsCell Test', () => {
         onRowDelete,
         onRowPreview,
       }}>
-      <ActionsCell data={mockData} rowIndex={0} hideContent={hideContent}>
+      <ActionsCell data={mockData} hideContent={hideContent}>
         <span>Child Content</span>
       </ActionsCell>
     </DataTableContext.Provider>
@@ -48,7 +48,7 @@ describe('ActionsCell Test', () => {
 
     fireEvent.click(deleteIcon);
 
-    expect(onRowDelete).toHaveBeenCalledWith({ row: 0, data: mockData });
+    expect(onRowDelete).toHaveBeenCalledWith(mockData);
   });
 
   it('should call onRowPreview when preview icon is clicked', () => {
@@ -71,7 +71,7 @@ describe('ActionsCell Test', () => {
           handleSearchText: vi.fn(),
           searchText: '',
         }}>
-        <ActionsCell data={mockData} rowIndex={0} hideContent={false}>
+        <ActionsCell data={mockData} hideContent={false}>
           <span>Child Content</span>
         </ActionsCell>
       </DataTableContext.Provider>

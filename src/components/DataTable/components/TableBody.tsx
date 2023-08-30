@@ -28,7 +28,7 @@ export const TableBody = <T,>({ newRow, cancelNewRow }: Props<T>) => {
         />
       )}
       {data.length ? (
-        data.map((row, i) => <TableRow<T> rowIndex={i} key={i} data={row} columnDefs={columnDefs} />)
+        data.map((row, i) => <TableRow<T> key={i} data={row} columnDefs={columnDefs} />)
       ) : (
         <tr>
           <td colSpan={columnDefs.length + 1}>
@@ -41,18 +41,17 @@ export const TableBody = <T,>({ newRow, cancelNewRow }: Props<T>) => {
 };
 
 interface TableRowProps<T> {
-  rowIndex: number;
   data: T;
   columnDefs: Array<ColumnDefs<T>>;
 }
 
-const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
+const TableRow = <T,>({ data, columnDefs }: TableRowProps<T>) => {
   const { onRowEdit } = useDataTableContext();
 
   const rowValues: Array<RowValues<T>> = useMemo(() => getRowValues(data, columnDefs), [data, columnDefs]);
 
   if (onRowEdit) {
-    return <EditableRow<T> onSubmit={onRowEdit} rowIndex={rowIndex} initialValues={data} rowValues={rowValues} />;
+    return <EditableRow<T> onSubmit={onRowEdit} initialValues={data} rowValues={rowValues} />;
   }
 
   return (
@@ -60,7 +59,7 @@ const TableRow = <T,>({ data, columnDefs, rowIndex }: TableRowProps<T>) => {
       {rowValues.map(({ field, value, cellRenderer }, i) => (
         <TableBodyCellRenderer key={i} value={value} cellRenderer={cellRenderer} />
       ))}
-      <ActionsCell data={data} rowIndex={rowIndex} />
+      <ActionsCell data={data} />
     </tr>
   );
 };

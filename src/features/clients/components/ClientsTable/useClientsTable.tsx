@@ -74,7 +74,7 @@ export const useClientsTable = (clients: Client[] | undefined, onClientSelected:
     onRowEdit: (data: Client, hideEdition) => {
       updateClientMutation.mutateAsync({ id: data.id, data }).then(hideEdition);
     },
-    onRowDelete: ({ data }) => {
+    onRowDelete: (data) => {
       deleteClientMutation.mutate(data.id);
     },
     onRowAdded: (data, hideEdition) => {
